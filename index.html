@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pukhtoon Fast Food Peshawar | Late-Night Burgers, Pizza &amp; Shawarma</title>
+  <meta name="description" content="Peshawar's favourite late-night cravings, delivered hot. Budget-friendly Zinger burgers, loaded pizzas, paratha rolls and shawarmas near University Road, Tehkal. Open daily 4 PM – 2 AM.">
+  <meta name="theme-color" content="#121212">
+  <meta property="og:title" content="Pukhtoon Fast Food Peshawar | Late-Night Cravings, Delivered Hot">
+  <meta property="og:description" content="Zinger burgers, loaded pizzas and saucy shawarmas near University Road, Tehkal. Order directly on WhatsApp.">
+  <meta property="og:type" content="restaurant">
+  <meta property="og:image" content="assets/images/zinger-burger.jpg">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%23121212'/%3E%3Cpath d='M50 18c6 14 18 20 18 34a18 18 0 1 1-36 0c0-14 12-20 18-34z' fill='%23FF6B00'/%3E%3Cpath d='M50 44c3 7 8 10 8 17a8 8 0 1 1-16 0c0-7 5-10 8-17z' fill='%23E63946'/%3E%3C/svg%3E">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- ================= TOP BAR ================= -->
+  <div class="topbar">
+    <div class="container topbar__inner">
+      <p class="topbar__msg">
+        <i class="fa-solid fa-fire-flame-curved" aria-hidden="true"></i>
+        <span><strong>Open now</strong> till 2:00 AM &middot; Delivery 3:00 PM &ndash; 1:00 AM</span>
+      </p>
+      <p class="topbar__msg topbar__msg--hide-sm">
+        <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+        <span>University Road, Tehkal Payan, Peshawar</span>
+      </p>
+      <a class="topbar__call" href="tel:+923150090303">
+        <i class="fa-solid fa-phone-volume" aria-hidden="true"></i>
+        <span>+92 315 009 0303</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- ================= HEADER ================= -->
+  <header class="site-header" id="siteHeader">
+    <div class="container header__inner">
+      <a href="#home" class="brand" aria-label="Pukhtoon Fast Food Peshawar — home">
+        <span class="brand__mark"><i class="fa-solid fa-fire" aria-hidden="true"></i></span>
+        <span class="brand__text">
+          <strong>Pukhtoon</strong>
+          <small>Fast Food &middot; Peshawar</small>
+        </span>
+      </a>
+
+      <nav class="nav" id="primaryNav" aria-label="Primary">
+        <a href="#home" class="nav__link is-active">Home</a>
+        <a href="#menu" class="nav__link">Menu</a>
+        <a href="#why" class="nav__link">Why Us</a>
+        <a href="#reviews" class="nav__link">Reviews</a>
+        <a href="#location" class="nav__link">Location</a>
+        <a href="https://wa.me/923150090303?text=Assalam%20o%20Alaikum!%20I%27d%20like%20to%20place%20an%20order." class="nav__cta" target="_blank" rel="noopener">
+          <i class="fa-brands fa-whatsapp" aria-hidden="true"></i> Order Now
+        </a>
+      </nav>
+
+      <div class="header__actions">
+        <button class="cart-btn" id="headerCartBtn" type="button" aria-label="Open your order">
+          <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+          <span class="cart-btn__count" id="headerCartCount" hidden>0</span>
+        </button>
+        <button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="primaryNav">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ================= HERO ================= -->
+    <section class="hero" id="home">
+      <div class="hero__glow" aria-hidden="true"></div>
+      <div class="container hero__inner">
+        <div class="hero__copy">
+          <p class="eyebrow">
+            <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+            Tehkal Payan &middot; University Road &middot; Peshawar
+          </p>
+
+          <h1 class="hero__title">
+            Peshawar&rsquo;s Favourite
+            <span class="grad">Late&#8209;Night Cravings</span>,
+            Delivered Hot!
+          </h1>
+
+          <p class="hero__sub">
+            Budget-friendly <strong>Zinger Burgers</strong>, loaded <strong>Pizzas</strong> and saucy
+            <strong>Shawarmas</strong> made fresh near University Road, Tehkal &mdash; at your door,
+            piping hot, any night until 2&nbsp;AM.
+          </p>
+
+          <div class="hero__actions">
+            <a href="#menu" class="btn btn--primary">
+              <i class="fa-solid fa-utensils" aria-hidden="true"></i> Explore Menu
+            </a>
+            <a href="https://wa.me/923150090303?text=Assalam%20o%20Alaikum!%20I%27d%20like%20to%20place%20an%20order%20from%20your%20menu." class="btn btn--ghost" target="_blank" rel="noopener">
+              <i class="fa-brands fa-whatsapp" aria-hidden="true"></i> Order on WhatsApp
+            </a>
+          </div>
+
+          <ul class="trust">
+            <li class="trust__item"><i class="fa-solid fa-star" aria-hidden="true"></i> <strong>4.6&#9733;</strong> Google Rated</li>
+            <li class="trust__item"><i class="fa-solid fa-moon" aria-hidden="true"></i> Open Till <strong>2:00 AM</strong></li>
+            <li class="trust__item"><i class="fa-solid fa-certificate" aria-hidden="true"></i> <strong>100%</strong> Halal</li>
+          </ul>
+        </div>
+
+        <div class="hero__visual">
+          <div class="hero__frame">
+            <img src="assets/images/zinger-burger.jpg" width="1200" height="900"
+                 alt="Crispy Zinger burger with melted cheese on a dark plate" fetchpriority="high">
+          </div>
+
+          <div class="float-card float-card--rating">
+            <span class="float-card__icon"><i class="fa-solid fa-star" aria-hidden="true"></i></span>
+            <span>
+              <strong>4.6 / 5</strong>
+              <small>72+ Google reviews</small>
+            </span>
+          </div>
+
+          <div class="float-card float-card--price">
+            <span class="float-card__icon float-card__icon--red"><i class="fa-solid fa-burger" aria-hidden="true"></i></span>
+            <span>
+              <strong>Zinger Burger</strong>
+              <small>Rs. 380 &middot; Bestseller</small>
+            </span>
+          </div>
+
+          <div class="float-card float-card--time">
+            <i class="fa-solid fa-motorcycle" aria-hidden="true"></i>
+            <span>Hot delivery till 1 AM</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <ul class="hero-stats reveal">
+          <li><strong>4.6&#9733;</strong><span>Google &middot; 72+ reviews</span></li>
+          <li><strong>4.9&#9733;</strong><span>Foodpanda &middot; 97+ reviews</span></li>
+          <li><strong>Rs. 250&ndash;1,500</strong><span>Budget-friendly menu</span></li>
+          <li><strong>2 Outlets</strong><span>Across the road, Tehkal</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ================= MENU ================= -->
+    <section class="section menu" id="menu">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow"><i class="fa-solid fa-fire-flame-curved" aria-hidden="true"></i> Fresh &amp; Fiery</p>
+          <h2 class="section-title">Our Menu</h2>
+          <p class="section-lead">
+            Real prices, real portions. Tap a category to filter, then build your order &mdash;
+            we&rsquo;ll confirm it on WhatsApp in seconds.
+          </p>
+        </div>
+
+        <div class="filters" role="group" aria-label="Filter menu by category">
+          <button class="filter is-active" type="button" aria-pressed="true" data-filter="all">
+            <i class="fa-solid fa-border-all" aria-hidden="true"></i> All
+          </button>
+          <button class="filter" type="button" aria-pressed="false" data-filter="burgers">
+            <i class="fa-solid fa-burger" aria-hidden="true"></i> Burgers
+          </button>
+          <button class="filter" type="button" aria-pressed="false" data-filter="pizzas">
+            <i class="fa-solid fa-pizza-slice" aria-hidden="true"></i> Pizzas
+          </button>
+          <button class="filter" type="button" aria-pressed="false" data-filter="rolls">
+            <i class="fa-solid fa-utensils" aria-hidden="true"></i> Rolls &amp; Shawarma
+          </button>
+          <button class="filter" type="button" aria-pressed="false" data-filter="sides">
+            <i class="fa-solid fa-drumstick-bite" aria-hidden="true"></i> Sides &amp; Chinese
+          </button>
+          <button class="filter" type="button" aria-pressed="false" data-filter="desserts">
+            <i class="fa-solid fa-ice-cream" aria-hidden="true"></i> Desserts &amp; Drinks
+          </button>
+        </div>
+
+        <div class="menu-grid" id="menuGrid">
+          <!-- Burgers -->
+          <article class="dish" data-category="burgers" data-id="zinger-burger" data-name="Zinger Burger" data-price="380">
+            <div class="dish__media">
+              <img src="assets/images/zinger-burger.jpg" width="800" height="600" loading="lazy" alt="Zinger Burger">
+              <span class="dish__tag">Bestseller</span>
+              <span class="dish__cat">Burgers</span>
+            </div>
+            <div class="dish__body">
+              <h3 class="dish__name">Zinger Burger</h3>
+              <p class="dish__desc">Crunchy chicken fillet, sesame bun, garlic mayo and crisp lettuce. The one everyone comes back for.</p>
+              <div class="dish__foot">
+                <span class="dish__price"><small>Rs.</small> 380</span>
+                <button class="add-btn" type="button" data-add="zinger-burger">
+                  <i class="fa-solid fa-plus" aria-hidden="true"></i> Add to Order
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish" data-category="burgers" data-id="shami-burger" data-name="Traditional Shami Burger" data-price="220">
+            <div class="dish__media">
+              <img src="assets/images/shami-burger.jpg" width="800" height="600" loading="lazy" alt="Traditional Shami Burger">
+              <span class="dish__tag dish__tag--mild">Budget Pick</span>
+              <span class="dish__cat">Burgers</span>
+            </div>
+            <div class="dish__body">
+              <h3 class="dish__name">Traditional Shami Burger</h3>
+              <p class="dish__desc">Desi-style shami kebab with fried egg, green chutney, onion rings and crunchy salad.</p>
+              <div class="dish__foot">
+                <span class="dish__price"><small>Rs.</small> 220</span>
+                <button class="add-btn" type="button" data-add="shami-burger">
+                  <i class="fa-solid fa-plus" aria-hidden="true"></i> Add to Order
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Pizzas -->
+          <article class="dish" data-category="pizzas" data-id="crown-crust-pizza" data-name="Loaded Crown Crust Pizza (Medium)" data-price="1150">
+            <div class="dish__media">
+              <img src="assets/images/crown-crust-pizza.jpg" width="800" height="600" loading="lazy" alt="Loaded Crown Crust Pizza">
+              <span class="dish__tag">Loaded</span>
+              <span class="dish__cat">Pizzas</span>
+            </div>
+            <div class="dish__body">
+              <h3 class="dish__name">Loaded Crown Crust Pizza <span class="dish__size">Medium</span></h3>
+              <p class="dish__desc">Cheese-filled crown crust, tikka chicken, black olives, capsicum and a double layer of mozzarella.</p>
+              <div class="dish__foot">
+                <span class="dish__price"><small>Rs.</small> 1,150</span>
+                <button class="add-btn" type="button" data-add="crown-crust-pizza">
+                  <i class="fa-solid fa-plus" aria-hidden="true"></i> Add to Order
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish" data-category="pizzas" data-id="fajita-pizza" data-name="Chicken Fajita Pizza (Small)" data-price="850">
+            <div class="dish__media">
+              <img src="assets/images/fajita-pizza.jpg" width="800" height="600" loading="lazy" alt="Chicken Fajita Pizza">
+              <span class="dish__tag dish__tag--mild">New</span>
+              <span class="dish__cat">Pizzas</span>
+            </div>
+            <div class="dish__body">
+              <h3 class="dish__name">Chicken Fajita Pizza <span class="dish__size">Small</span></h3>
+              <p class="dish__desc">Smoky fajita chicken, onion, capsicum and a proper stretchy cheese pull in every slice.</p>
+              <div class="dish__foot">
+                <span class="dish__price"><small>Rs.</small> 850</span>
+                <button class="add-btn" type="button" data-add="fajita-pizza">
+                  <i class="fa-solid fa-plus" aria-hidden="true"></i> Add to Order
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Rolls & Shawarma -->
+          <article class="dish" data-category="rolls" data-id="paratha-roll" data-name="Chicken Paratha Roll" data-price="280">
+            <div class="dish__media">
+              <img src="assets/images/paratha-roll.jpg" width="800" height="600" loading="lazy" alt="Chicken Paratha Roll">
+              <span class="dish__tag">Late-Night Hero</span>
+              <span class="dish__cat">Rolls &amp; Shawarma</span>
+            </div>
+            <div class="dish__body">
+              <h3 class="dish__name">Chicken Paratha Roll</h3>
+              <p class="dish__desc">Flaky paratha wrapped around juicy chicken, mint chutney and fresh onions. Best eaten hot.</p>
+              <div class="dish__foot">
+                <span class="dish__price"><small>Rs.</small> 280</span>
+                <button class="add-btn" type="button" data-add="paratha-roll">
+                  <i class="fa-solid fa-plus" aria-hidden="true"></i> Add to Order
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish" data-category="rolls" data-id="cheese-shawarma" data-name="Spicy Cheese Shawarma" data-price="300">
+            <div class="dish__media">
+              <img src="assets/images/shawarma.jpg" width="800" height="600" loading="lazy" alt="Spicy Cheese Shawarma">
+              <span class="dish__tag dish__tag--mild">Spicy</span>
+              <span class="dish__cat">Rolls &amp; Shawarma</span>
+            </div>
+            <div class="dish__body">
+              <h3 class="dish__name">Spicy Cheese Shawarma</h3>
+              <p class="dish__desc">Grilled chicken, cheese sauce and garlic mayo rolled in warm pita with a chilli kick.</p>
+              <div class="dish__foot">
+                <span class="dish__price"><small>Rs.</small> 300</span>
+                <button class="add-btn" type="button" data-add="cheese-shawarma">
+                  <i class="fa-solid fa-plus" aria-hidden="true"></i> Add to Order
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Sides & Chinese -->
+          <article class="dish" data-category="sides" data-id="hot-wings" data-name="Hot Wings (6 Pcs)" data-price="450">
+            <div class="dish__media">
+              <img src="assets/images/hot-wings.jpg" width="800" height="600" loading="lazy" alt="Hot Wings, 6 pieces">
+              <span class="dish__tag">Hot</span>
+              <span class="dish__cat">Sides &amp; Chinese</span>
+            </div>
+            <div class="dish__body">
+              <h3 class="dish__name">Hot Wings <span class="dish__size">6 Pcs</span></h3>
+              <p class="dish__desc">Six crispy wings tossed in fiery hot sauce, served with a cooling dip.</p>
+              <div class="dish__foot">
+                <span class="dish__price"><small>Rs.</small> 450</span>
+                <button class="add-btn" type="button" data-add="hot-wings">
+                  <i class="fa-solid fa-plus" aria-hidden="true"></i> Add to Order
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish" data-category="sides" data-id="chow-mein" data-name="Chicken Chow Mein" data-price="550">
+            <div class="dish__media">
+              <img src="assets/images/chow-mein.jpg" width="800" height="600" loading="lazy" alt="Chicken Chow Mein">
+              <span class="dish__cat">Sides &amp; Chinese</span>
+            </div>
+            <div class="dish__body">
+              <h3 class="dish__name">Chicken Chow Mein</h3>
+              <p class="dish__desc">Wok-tossed noodles with chicken strips, cabbage, carrot and spring onion. Generous sharing portion.</p>
+              <div class="dish__foot">
+                <span class="dish__price"><small>Rs.</small> 550</span>
+                <button class="add-btn" type="button" data-add="chow-mein">
+                  <i class="fa-solid fa-plus" aria-hidden="true"></i> Add to Order
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish" data-category="sides" data-id="fried-chicken" data-name="Crispy Fried Chicken Piece" data-price="250">
+            <div class="dish__media">
+              <img src="assets/images/fried-chicken.jpg" width="800" height="600" loading="lazy" alt="Crispy Fried Chicken Piece">
+              <span class="dish__tag dish__tag--mild">Crunchy</span>
+              <span class="dish__cat">Sides &amp; Chinese</span>
+            </div>
+            <div class="dish__body">
+              <h3 class="dish__name">Crispy Fried Chicken Piece</h3>
+              <p class="dish__desc">Golden, craggy coating with juicy chicken inside. Add a piece or two to any order.</p>
+              <div class="dish__foot">
+                <span class="dish__price"><small>Rs.</small> 250</span>
+                <button class="add-btn" type="button" data-add="fried-chicken">
+                  <i class="fa-solid fa-plus" aria-hidden="true"></i> Add to Order
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish" data-category="sides" data-id="loaded-fries" data-name="Loaded Cheese Fries" data-price="350">
+            <div class="dish__media">
+              <img src="assets/images/loaded-fries.jpg" width="800" height="600" loading="lazy" alt="Loaded Cheese Fries">
+              <span class="dish__tag dish__tag--mild">Sharing</span>
+              <span class="dish__cat">Sides &amp; Chinese</span>
+            </div>
+            <div class="dish__body">
+              <h3 class="dish__name">Loaded Cheese Fries</h3>
+              <p class="dish__desc">Crispy fries smothered in cheese sauce with spicy chicken bits. Made for sharing.</p>
+              <div class="dish__foot">
+                <span class="dish__price"><small>Rs.</small> 350</span>
+                <button class="add-btn" type="button" data-add="loaded-fries">
+                  <i class="fa-solid fa-plus" aria-hidden="true"></i> Add to Order
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Desserts & Drinks -->
+          <article class="dish" data-category="desserts" data-id="cold-coffee" data-name="Cold Coffee / Ice Cream Scoop" data-price="200">
+            <div class="dish__media">
+              <img src="assets/images/cold-coffee.jpg" width="800" height="600" loading="lazy" alt="Cold Coffee with Ice Cream">
+              <span class="dish__tag dish__tag--mild">Chilled</span>
+              <span class="dish__cat">Desserts &amp; Drinks</span>
+            </div>
+            <div class="dish__body">
+              <h3 class="dish__name">Cold Coffee <span class="dish__size">/ Ice Cream Scoop</span></h3>
+              <p class="dish__desc">Chilled coffee topped with a scoop of vanilla ice cream and chocolate drizzle.</p>
+              <div class="dish__foot">
+                <span class="dish__price"><small>Rs.</small> 200</span>
+                <button class="add-btn" type="button" data-add="cold-coffee">
+                  <i class="fa-solid fa-plus" aria-hidden="true"></i> Add to Order
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish" data-category="desserts" data-id="oreo-milkshake" data-name="Oreo Milkshake" data-price="320">
+            <div class="dish__media">
+              <img src="assets/images/oreo-milkshake.jpg" width="800" height="600" loading="lazy" alt="Oreo Milkshake">
+              <span class="dish__cat">Desserts &amp; Drinks</span>
+            </div>
+            <div class="dish__body">
+              <h3 class="dish__name">Oreo Milkshake</h3>
+              <p class="dish__desc">Thick, creamy shake loaded with crushed Oreos, whipped cream and a chocolate swirl.</p>
+              <div class="dish__foot">
+                <span class="dish__price"><small>Rs.</small> 320</span>
+                <button class="add-btn" type="button" data-add="oreo-milkshake">
+                  <i class="fa-solid fa-plus" aria-hidden="true"></i> Add to Order
+                </button>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <p class="menu-note">
+          <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+          Prices in PKR and may vary slightly by outlet. Extra cheese, dips and drinks available on request.
+        </p>
+      </div>
+    </section>
+
+    <!-- ================= WHY US ================= -->
+    <section class="section why" id="why">
+      <div class="container">
+        <div class="section-head section-head--left reveal">
+          <p class="eyebrow"><i class="fa-solid fa-heart" aria-hidden="true"></i> Why Tehkal Orders Here</p>
+          <h2 class="section-title">Hot food, honest prices,<br>no waiting around.</h2>
+        </div>
+
+        <div class="why-grid">
+          <article class="feature reveal">
+            <span class="feature__icon"><i class="fa-solid fa-moon" aria-hidden="true"></i></span>
+            <h3>Open Till 2 AM</h3>
+            <p>Kitchen runs daily from 4:00 PM to 2:00 AM, with delivery until 1:00 AM. Late shift? We&rsquo;re still frying.</p>
+          </article>
+          <article class="feature reveal">
+            <span class="feature__icon"><i class="fa-solid fa-wallet" aria-hidden="true"></i></span>
+            <h3>Rs. 250 &ndash; Rs. 1,500</h3>
+            <p>Student-friendly pricing without shrinking the portions. Big flavour, small bill.</p>
+          </article>
+          <article class="feature reveal">
+            <span class="feature__icon"><i class="fa-solid fa-bolt" aria-hidden="true"></i></span>
+            <h3>Two Outlets, One Road</h3>
+            <p>Our second outlet sits directly across the road, so orders move fast even on busy Friday nights.</p>
+          </article>
+          <article class="feature reveal">
+            <span class="feature__icon"><i class="fa-solid fa-certificate" aria-hidden="true"></i></span>
+            <h3>100% Halal Kitchen</h3>
+            <p>Halal chicken and fresh oil, prepped in-house every evening before service starts.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= REVIEWS ================= -->
+    <section class="section reviews" id="reviews">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow"><i class="fa-solid fa-star" aria-hidden="true"></i> Real Ratings</p>
+          <h2 class="section-title">Loved Across Peshawar</h2>
+          <p class="section-lead">4.6&#9733; on Google and 4.9&#9733; on Foodpanda &mdash; here&rsquo;s what keeps people coming back.</p>
+        </div>
+
+        <div class="rating-strip reveal">
+          <div class="rating-strip__block">
+            <span class="rating-strip__score">4.6<i class="fa-solid fa-star" aria-hidden="true"></i></span>
+            <span class="rating-strip__meta"><strong>Google Reviews</strong><small>72+ ratings &middot; Tehkal branch</small></span>
+          </div>
+          <span class="rating-strip__divider" aria-hidden="true"></span>
+          <div class="rating-strip__block">
+            <span class="rating-strip__score">4.9<i class="fa-solid fa-star" aria-hidden="true"></i></span>
+            <span class="rating-strip__meta"><strong>Foodpanda</strong><small>97+ ratings &middot; delivered orders</small></span>
+          </div>
+          <a class="rating-strip__cta" href="https://wa.me/923150090303?text=I%27d%20like%20to%20place%20an%20order%20please." target="_blank" rel="noopener">
+            Join them <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+          </a>
+        </div>
+
+        <div class="review-grid">
+          <article class="review reveal">
+            <div class="review__stars" aria-label="5 out of 5 stars">
+              <i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i>
+            </div>
+            <p class="review__text">&ldquo;The Zinger here is criminally underrated &mdash; crispy, juicy and still hot when it reached University Town. Honestly beats the big brands for half the price.&rdquo;</p>
+            <footer class="review__author">
+              <span class="avatar" aria-hidden="true">HT</span>
+              <span><strong>Hamza Tariq</strong><small>Google Review &middot; University Town</small></span>
+            </footer>
+          </article>
+
+          <article class="review reveal">
+            <div class="review__stars" aria-label="5 out of 5 stars">
+              <i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i>
+            </div>
+            <p class="review__text">&ldquo;Ordered the Shami Burger and paratha rolls at 1 AM after a late shift. Delivery was at my gate in Tehkal Payan in about 25 minutes and everything was warm.&rdquo;</p>
+            <footer class="review__author">
+              <span class="avatar" aria-hidden="true">AK</span>
+              <span><strong>Ayesha Khan</strong><small>Google Review &middot; Tehkal Payan</small></span>
+            </footer>
+          </article>
+
+          <article class="review reveal">
+            <div class="review__stars" aria-label="4 out of 5 stars">
+              <i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-regular fa-star" aria-hidden="true"></i>
+            </div>
+            <p class="review__text">&ldquo;Two outlets right across the road from each other, so you never wait long &mdash; even near the NADRA office on a Friday. Chow mein plus hot wings is our weekly ritual.&rdquo;</p>
+            <footer class="review__author">
+              <span class="avatar" aria-hidden="true">BA</span>
+              <span><strong>Bilal Afridi</strong><small>Foodpanda Review &middot; Canal Town</small></span>
+            </footer>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= LOCATION ================= -->
+    <section class="section location" id="location">
+      <div class="container location__inner">
+        <div class="location__card reveal">
+          <p class="eyebrow"><i class="fa-solid fa-location-dot" aria-hidden="true"></i> Find Us</p>
+          <h2 class="section-title">Right on University Road</h2>
+          <p class="location__lead">Drop by for takeaway or let us deliver across Tehkal, University Town, Canal Town and Hayatabad.</p>
+
+          <ul class="info-list">
+            <li>
+              <span class="info-list__icon"><i class="fa-solid fa-store" aria-hidden="true"></i></span>
+              <span><strong>Main Outlet</strong><small>Tehkal Payan Rd, near NADRA Office, Tehkal, Peshawar</small></span>
+            </li>
+            <li>
+              <span class="info-list__icon"><i class="fa-solid fa-shop" aria-hidden="true"></i></span>
+              <span><strong>Second Outlet</strong><small>Directly across the road, University Road, Tehkal</small></span>
+            </li>
+            <li>
+              <span class="info-list__icon"><i class="fa-solid fa-clock" aria-hidden="true"></i></span>
+              <span><strong>Open Daily 4:00 PM &ndash; 2:00 AM</strong><small>Delivery 3:00 PM &ndash; 1:00 AM</small></span>
+            </li>
+            <li>
+              <span class="info-list__icon"><i class="fa-solid fa-phone" aria-hidden="true"></i></span>
+              <span><strong>+92 315 009 0303</strong><small>Call or WhatsApp for orders</small></span>
+            </li>
+          </ul>
+
+          <div class="location__actions">
+            <a href="tel:+923150090303" class="btn btn--primary">
+              <i class="fa-solid fa-phone" aria-hidden="true"></i> Call Now
+            </a>
+            <a href="https://wa.me/923150090303?text=Assalam%20o%20Alaikum!%20I%27d%20like%20to%20place%20an%20order." class="btn btn--ghost" target="_blank" rel="noopener">
+              <i class="fa-brands fa-whatsapp" aria-hidden="true"></i> WhatsApp Us
+            </a>
+          </div>
+        </div>
+
+        <div class="map-card reveal">
+          <iframe
+            title="Map showing Pukhtoon Fast Food on University Road, Tehkal Payan, Peshawar"
+            src="https://www.google.com/maps?q=Tehkal%20Payan%20Road%2C%20University%20Road%2C%20Peshawar%2C%20Pakistan&output=embed"
+            width="600" height="450" style="border:0" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+          <a class="map-card__link" href="https://www.google.com/maps/search/?api=1&query=Tehkal+Payan+Road+University+Road+Peshawar" target="_blank" rel="noopener">
+            <i class="fa-solid fa-diamond-turn-right" aria-hidden="true"></i> Get Directions
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="site-footer">
+    <div class="container footer__grid">
+      <div class="footer__brand">
+        <a href="#home" class="brand" aria-label="Pukhtoon Fast Food Peshawar — home">
+          <span class="brand__mark"><i class="fa-solid fa-fire" aria-hidden="true"></i></span>
+          <span class="brand__text"><strong>Pukhtoon</strong><small>Fast Food &middot; Peshawar</small></span>
+        </a>
+        <p>Late-night burgers, pizzas and rolls from Tehkal Payan. Made fresh, priced fair, delivered hot.</p>
+        <div class="footer__social">
+          <a href="https://wa.me/923150090303" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></a>
+          <a href="tel:+923150090303" aria-label="Call us"><i class="fa-solid fa-phone" aria-hidden="true"></i></a>
+          <a href="https://www.google.com/maps/search/?api=1&query=Tehkal+Payan+Road+University+Road+Peshawar" target="_blank" rel="noopener" aria-label="Find us on Google Maps"><i class="fa-solid fa-location-dot" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <nav class="footer__col" aria-label="Footer navigation">
+        <h4>Explore</h4>
+        <a href="#menu">Full Menu</a>
+        <a href="#why">Why Choose Us</a>
+        <a href="#reviews">Reviews</a>
+        <a href="#location">Location &amp; Timings</a>
+      </nav>
+
+      <div class="footer__col">
+        <h4>Timings</h4>
+        <p>Open Daily<br><span>4:00 PM &ndash; 2:00 AM</span></p>
+        <p>Delivery<br><span>3:00 PM &ndash; 1:00 AM</span></p>
+      </div>
+
+      <div class="footer__col">
+        <h4>Contact</h4>
+        <a href="tel:+923150090303"><i class="fa-solid fa-phone" aria-hidden="true"></i> +92 315 009 0303</a>
+        <a href="https://wa.me/923150090303" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i> WhatsApp Orders</a>
+        <p class="footer__addr"><i class="fa-solid fa-location-dot" aria-hidden="true"></i> Tehkal Payan Rd, near NADRA Office, Peshawar</p>
+      </div>
+    </div>
+
+    <div class="container footer__bottom">
+      <p>&copy; <span id="year">2026</span> Pukhtoon Fast Food Peshawar. All rights reserved.</p>
+      <p class="footer__note">Demo website built for presentation purposes. Prices and reviews are illustrative.</p>
+    </div>
+  </footer>
+
+  <!-- ================= FLOATING CART ================= -->
+  <button class="floating-cart" id="floatingCart" type="button" aria-label="View your order">
+    <span class="floating-cart__icon">
+      <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+      <span class="floating-cart__badge" id="cartCount">0</span>
+    </span>
+    <span class="floating-cart__text">
+      <strong id="cartTotal">Rs. 0</strong>
+      <small id="cartLabel">View order</small>
+    </span>
+    <i class="fa-solid fa-chevron-right floating-cart__arrow" aria-hidden="true"></i>
+  </button>
+
+  <!-- ================= CART DRAWER ================= -->
+  <div class="drawer-overlay" id="drawerOverlay" hidden></div>
+
+  <aside class="drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" aria-hidden="true">
+    <header class="drawer__head">
+      <div>
+        <h2 id="drawerTitle">Your Order</h2>
+        <p id="drawerSubtitle">Fresh off the grill, sent straight to WhatsApp</p>
+      </div>
+      <button class="drawer__close" id="drawerClose" type="button" aria-label="Close order drawer">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    </header>
+
+    <div class="drawer__body">
+      <div class="cart-empty" id="cartEmpty">
+        <span class="cart-empty__icon"><i class="fa-solid fa-bag-shopping" aria-hidden="true"></i></span>
+        <h3>Your bag is empty</h3>
+        <p>Add a Zinger, a paratha roll or a pizza and we&rsquo;ll get it ready.</p>
+        <button class="btn btn--primary btn--sm" type="button" id="browseMenuBtn">
+          <i class="fa-solid fa-utensils" aria-hidden="true"></i> Browse Menu
+        </button>
+      </div>
+
+      <ul class="cart-list" id="cartList"></ul>
+
+      <div class="cart-tools" id="cartTools" hidden>
+        <button class="cart-tools__clear" type="button" id="clearCartBtn">
+          <i class="fa-solid fa-trash-can" aria-hidden="true"></i> Clear order
+        </button>
+        <span class="cart-tools__hint" id="cartToolsHint"></span>
+      </div>
+
+      <form class="checkout" id="checkoutForm" novalidate>
+        <h3 class="checkout__title"><i class="fa-solid fa-user" aria-hidden="true"></i> Delivery Details</h3>
+
+        <div class="field">
+          <label for="customerName">Your Name <span aria-hidden="true">*</span></label>
+          <input type="text" id="customerName" name="name" placeholder="e.g. Ahmad Ali" autocomplete="name" required>
+          <small class="field__error" id="nameError" hidden>Please enter your name.</small>
+        </div>
+
+        <div class="field">
+          <label for="customerAddress">Delivery Address <span aria-hidden="true">*</span></label>
+          <input type="text" id="customerAddress" name="address" placeholder="House / street, area &mdash; e.g. Tehkal Payan" autocomplete="street-address" list="areaSuggestions" required>
+          <datalist id="areaSuggestions">
+            <option value="Tehkal Payan"></option>
+            <option value="University Town"></option>
+            <option value="Canal Town"></option>
+            <option value="Hayatabad"></option>
+            <option value="Tehkal Bala"></option>
+            <option value="Peshawar University"></option>
+          </datalist>
+          <small class="field__error" id="addressError" hidden>Please add an address so our rider can find you.</small>
+        </div>
+
+        <div class="field">
+          <span class="field__label">Order Type</span>
+          <div class="order-type" role="radiogroup" aria-label="Order type">
+            <label class="order-type__option">
+              <input type="radio" name="orderType" value="Delivery" checked>
+              <span><i class="fa-solid fa-motorcycle" aria-hidden="true"></i> Delivery</span>
+            </label>
+            <label class="order-type__option">
+              <input type="radio" name="orderType" value="Takeaway">
+              <span><i class="fa-solid fa-bag-shopping" aria-hidden="true"></i> Takeaway</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="orderNotes">Notes <span class="field__optional">(optional)</span></label>
+          <textarea id="orderNotes" name="notes" rows="2" placeholder="Extra chutney, no onions, call on arrival&hellip;"></textarea>
+        </div>
+      </form>
+    </div>
+
+    <footer class="drawer__foot">
+      <div class="totals">
+        <span>Subtotal</span>
+        <strong id="cartSubtotal">Rs. 0</strong>
+      </div>
+      <p class="totals__note" id="deliveryNote"><i class="fa-solid fa-motorcycle" aria-hidden="true"></i> Delivery charges confirmed on WhatsApp</p>
+      <button class="btn btn--whatsapp btn--block" id="placeOrderBtn" type="button">
+        <i class="fa-brands fa-whatsapp" aria-hidden="true"></i> Place Order via WhatsApp
+      </button>
+      <p class="totals__secure"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> No online payment &mdash; pay cash on delivery</p>
+    </footer>
+  </aside>
+
+  <div class="toast-stack" id="toastStack" aria-live="polite" aria-atomic="true"></div>
+
+  <noscript>
+    <div class="noscript">This demo works best with JavaScript enabled. You can still call us at +92 315 009 0303 to order.</div>
+  </noscript>
+
+  <script src="script.js"></script>
+</body>
+</html>
