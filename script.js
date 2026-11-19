@@ -86,7 +86,17 @@
   const savedCart = readStore(CART_KEY, []);
   if (Array.isArray(savedCart)) {
     savedCart.forEach((entry) => {
-      if (entry && dishes[entry.id] && Number(entry.qty) > 0) {
+      if (!entry || !(Number(entry.qty) > 0)) return;
+      // Items the AI assistant added from the live sheet have no .dish card here
+      if (!dishes[entry.id] && entry.name && Number(entry.price) > 0) {
+        dishes[entry.id] = {
+          id: entry.id,
+          name: entry.name,
+          price: Number(entry.price),
+          image: entry.image || "assets/images/zinger-burger.jpg",
+        };
+      }
+      if (dishes[entry.id]) {
         cart.set(entry.id, Math.min(99, Math.floor(Number(entry.qty))));
       }
     });
@@ -119,7 +129,16 @@
 
   function persistCart() {
     const rows = [];
-    cart.forEach((qty, id) => rows.push({ id: id, qty: qty }));
+    cart.forEach((qty, id) => {
+      const dish = dishes[id];
+      rows.push({
+        id: id,
+        qty: qty,
+        name: dish ? dish.name : id,
+        price: dish ? dish.price : 0,
+        image: dish ? dish.image : "",
+      });
+    });
     writeStore(CART_KEY, rows);
   }
 
@@ -156,6 +175,7 @@
 
     // Floating cart visibility
     if (floatingCart) floatingCart.classList.toggle("is-visible", count > 0);
+    document.body.classList.toggle("has-order", count > 0);
 
     // Rebuild rows
     cartList.textContent = "";
@@ -691,4 +711,42 @@
 
   // Show the floating cart on load if a saved cart exists
   if (floatingCart && cart.size) floatingCart.classList.add("is-visible");
+
+  /* =========================================================
+     PUBLIC BRIDGE — lets the AI widget (chat.js) drive the cart
+     ========================================================= */
+  window.PukhtoonOrder = {
+    add(item, qty) {
+      if (!item || !item.id) return;
+      const amount = Math.max(1, Math.min(50, Math.floor(Number(qty) || 1)));
+      if (!dishes[item.id]) {
+        dishes[item.id] = {
+          id: item.id,
+          name: item.name || item.id,
+          price: Number(item.price) || 0,
+          image: item.image || "assets/images/zinger-burger.jpg",
+        };
+      }
+      cart.set(item.id, Math.min(99, (cart.get(item.id) || 0) + amount));
+      renderCart();
+      bumpCart();
+      toast(dishes[item.id].name + " added to your order");
+    },
+    items() {
+      const out = [];
+      cart.forEach((qty, id) => {
+        const dish = dishes[id];
+        if (dish) out.push({ id: id, name: dish.name, price: dish.price, qty: qty });
+      });
+      return out;
+    },
+    count: () => cartQuantity(),
+    total: () => cartSubtotalValue(),
+    clear() {
+      cart.clear();
+      renderCart();
+    },
+    open: () => openDrawer(),
+    close: () => closeDrawer(),
+  };
 })();

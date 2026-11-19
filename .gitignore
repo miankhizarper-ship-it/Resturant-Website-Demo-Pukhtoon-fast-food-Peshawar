@@ -1,0 +1,9 @@
+# Local secrets — never commit
+apps-script/Secrets.gs
+.env
+.env.*
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp
