@@ -466,10 +466,10 @@ function handlePlaceOrder_(body) {
   var fee = type === "Delivery" ? Number(settings.delivery_fee) || 0 : 0;
   var total = subtotal + fee;
 
-  var name = clean_(order.name, 60) || "Guest";
-  var phone = clean_(order.phone, 20);
-  var address = clean_(order.address, 180);
-  var notes = clean_(order.notes, 200);
+  var name = safeText_(order.name, 60) || "Guest";
+  var phone = normalizePhone_(order.phone);
+  var address = safeText_(order.address, 180);
+  var notes = safeText_(order.notes, 200);
 
   if (type === "Delivery" && !address) {
     return { ok: false, error: "Add a delivery address so the rider can find you." };
@@ -549,6 +549,26 @@ function nextOrderId_() {
   } finally {
     lock.releaseLock();
   }
+}
+
+/**
+ * Keeps text out of the formula parser. A phone number typed as "+92 300…"
+ * or a note starting with "=" would otherwise land in the sheet as #ERROR!.
+ */
+function safeText_(value, max) {
+  var s = clean_(value, max);
+  return /^[=+@\-]/.test(s) ? s.slice(1).trim() : s;
+}
+
+/** "+92 315 009 0303" / "923150090303" -> "0315 009 0303" */
+function normalizePhone_(value) {
+  var digits = clean_(value, 24).replace(/[^\d+]/g, "");
+  if (!digits) return "";
+  if (/^\+92/.test(digits)) return "0" + digits.slice(3);
+  if (/^92\d{10}$/.test(digits)) return "0" + digits.slice(2);
+  if (/^0\d{9,10}$/.test(digits)) return digits;
+  if (/^\d{10}$/.test(digits)) return "0" + digits;
+  return digits.replace(/^\+/, "");
 }
 
 function clean_(value, max) {
