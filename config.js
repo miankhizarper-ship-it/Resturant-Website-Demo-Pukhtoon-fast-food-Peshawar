@@ -10,7 +10,7 @@
    ========================================================= */
 window.PUKHTOON_AI = {
   // e.g. "https://script.google.com/macros/s/AKfycb.../exec"
-  endpoint: "https://script.google.com/macros/s/AKfycbxb14g-mD_vexqsZA-efdoATATpez5tviCVns9g2xV8cy6pL_1hJSw57GjVDo81-j8s-w/exec",
+  endpoint: "https://script.google.com/macros/s/AKfycbwI43GloCM9c36zdyJRsgxxG6Yi--SVlFRNn6x0If2MZi5n2dUhWVctGQ9aQKFY8ybuTw/exec",
 
   restaurantName: "Pukhtoon Fast Food Peshawar",
   whatsapp: "923150090303",
