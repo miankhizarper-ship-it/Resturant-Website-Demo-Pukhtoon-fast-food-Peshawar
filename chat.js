@@ -349,9 +349,11 @@
         pushBot(res);
         if (res.reply) state.messages.push({ role: "model", text: res.reply });
         saveChat();
+        setStatus(LIVE ? "live" : "demo");
       })
       .catch(function (err) {
         if (typing.parentNode) typing.parentNode.removeChild(typing);
+        if (LIVE) setStatus("offline");
         var col = addRow("bot");
         var b = elNew("div", "ai-bubble");
         b.innerHTML = formatMarkup(
@@ -386,6 +388,7 @@
     req
       .then(function (res) {
         if (!res || res.ok === false) throw new Error((res && res.error) || "Order could not be saved");
+        setStatus(LIVE ? "live" : "demo");
         btn.innerHTML = '<i class="fa-solid fa-check"></i> Ordered';
         var changeBtn = btn.parentNode.querySelector("[data-change-order]");
         if (changeBtn) changeBtn.remove();
@@ -396,6 +399,7 @@
         draft = { items: [], name: "", address: "", type: "", notes: "" };
       })
       .catch(function (err) {
+        if (LIVE) setStatus("offline");
         btn.disabled = false;
         btn.innerHTML = original;
         var col = addRow("bot");
@@ -602,6 +606,17 @@
   /* ---------------------------------------------------------
      Panel behaviour
      --------------------------------------------------------- */
+  function setStatus(mode) {
+    if (!el.status) return;
+    if (mode === "live") {
+      el.status.innerHTML = '<span class="dot"></span> Online · replies in seconds';
+    } else if (mode === "offline") {
+      el.status.innerHTML = '<span class="dot" style="background:#e63946;box-shadow:0 0 0 3px rgba(230,57,70,.18)"></span> Can\u2019t reach the server · check config.js';
+    } else {
+      el.status.innerHTML = '<span class="dot" style="background:#ffb27a;box-shadow:0 0 0 3px rgba(255,178,122,.14)"></span> Demo mode · sample replies';
+    }
+  }
+
   function setBusy(b) {
     if (el.send) el.send.disabled = b;
   }
@@ -760,11 +775,7 @@
     el.reset = document.getElementById("aiReset");
     el.status = document.getElementById("aiStatus");
 
-    if (el.status) {
-      el.status.innerHTML = LIVE
-        ? '<span class="dot"></span> Online · replies in seconds'
-        : '<span class="dot" style="background:#ffb27a;box-shadow:0 0 0 3px rgba(255,178,122,.14)"></span> Demo mode · sample replies';
-    }
+    setStatus(LIVE ? "live" : "demo");
 
     var foot = document.getElementById("aiFootNote");
     if (foot) {
