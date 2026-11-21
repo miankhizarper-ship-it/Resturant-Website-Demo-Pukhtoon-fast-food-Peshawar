@@ -1,0 +1,8 @@
+name = "moviesmod-scraper"
+main = "src/worker.js"
+compatibility_date = "2026-11-21"
+
+# No secrets needed. Optional vars:
+# [vars]
+# SCRAPER_MAX_HOPS = "8"
+# SCRAPER_HOP_WAIT = "0"
