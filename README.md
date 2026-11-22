@@ -27,8 +27,10 @@ detail me `buttons[]`, `downloadGroups[]`, `imdb`, `related`, aur generate me
 moviesmod.fi/<slug>/                      (detail page)
   └─ maxbutton "Episode Links" / "Batch"   → episodes.modpro.blog/archives/<id>
        └─ "Episode N" / server buttons      → en.thenaukriadda.in/?sid=<b64>
-            └─ POST _lp_http2/_lp_token/_lp_chain/_lp_hop_index (timer page)
-                 └─ … hops …               → final file URL (drive.google.com etc.)
+            └─ stage-1: POST _lp_http2/_lp_token/_lp_chain/_lp_hop_index (10s timer)
+                 └─ stage-2: ?lp_go=lp-… URL + sc() cookie (6s timer, JS-only)
+                      └─ GET ?lp_go=… → 302 → driveseed.org/file/…
+                           └─ "Cloud Download" → direct file URL (r2.dev zip etc.)
 ```
 
 Single-file posts (`links.modpro.blog/archives/<id>`) seedhi server buttons dete hain
@@ -93,7 +95,7 @@ src/
     listing.js       home/search/explore cards + pagination
     detail.js        title, categories, imdb, download buttons, related
     source.js        modpro episodes/servers links
-    hop.js           thenaukriadda form (lp-s1-form) + final-link detection
+    hop.js           thenaukriadda stage-1 form + stage-2 lp_go/cookie + final-link detection
 mock/
   route.js, server.js   fixture replays (no internet needed)
 test/

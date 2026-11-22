@@ -21,6 +21,11 @@ test.before(async () => {
     try {
       const u = new URL(req.url, 'http://x');
       const result = await route(u.pathname, u.search, req.method);
+      if (result.redirect) {
+        res.writeHead(result.status || 302, { location: result.redirect });
+        res.end();
+        return;
+      }
       res.writeHead(result.status || 200, { 'content-type': result.type });
       res.end(result.body);
     } catch (err) {
@@ -105,8 +110,14 @@ test('e2e /api/generate follows hop to final link', async () => {
   );
   assert.equal(status, 200, JSON.stringify(body));
   assert.equal(body.type, 'generate');
-  assert.match(body.downloadUrl, /drive\.google\.com\/uc\?id=MOCKFILE123/);
-  assert.ok(body.hops.length >= 2, `hops ${body.hops.length}`);
+  // Full LinkPilot chain: stage1 form POST -> stage2 lp_go GET -> 302 ->
+  // driveseed landing page -> direct r2.dev zip.
+  assert.match(body.downloadUrl, /^https:\/\/pub-.*\.r2\.dev\/.*\.zip$/);
+  assert.ok(body.hops.length >= 4, `hops ${JSON.stringify(body.hops)}`);
+  const statuses = body.hops.map((h) => h.status);
+  assert.ok(statuses.includes('lp-go'), 'lp_go hop recorded');
+  const lpHop = body.hops.find((h) => h.status === 'lp-go');
+  assert.equal(lpHop.cookie, 'lp-6b02c58d27e2b', 'cookie name recorded');
 });
 
 test('e2e /api/detail?source=1 returns sources too', async () => {
