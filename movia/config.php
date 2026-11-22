@@ -11,6 +11,10 @@ define(
     getenv('MOVIA_API') ?: 'https://moviesmod-scraper.mkode.workers.dev'
 );
 
+// Set to false ONLY if your host has a broken CA bundle and debug.php
+// reports "SSL certificate problem" for the API fetch.
+define('API_SSL_VERIFY', true);
+
 // Static page cache (seconds). Set to 0 to disable.
 define('CACHE_TTL', 300);
 define('CACHE_DIR', __DIR__ . '/cache');

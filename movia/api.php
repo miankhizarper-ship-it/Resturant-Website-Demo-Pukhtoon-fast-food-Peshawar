@@ -90,7 +90,10 @@ $data = api_get($endpoint, $params, $timeout);
 
 if ($data === null) {
     http_response_code(502);
-    echo json_encode(['error' => 'Upstream API unreachable']);
+    echo json_encode([
+        'error'  => 'Upstream API unreachable',
+        'detail' => api_last_error(),
+    ]);
     exit;
 }
 

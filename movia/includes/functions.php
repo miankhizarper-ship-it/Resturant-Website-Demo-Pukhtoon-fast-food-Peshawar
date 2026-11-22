@@ -12,46 +12,91 @@ function e($s): string
     return htmlspecialchars((string)$s, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 
-/** Raw HTTP GET: cURL first, file_get_contents fallback. Returns body or null. */
+/** Last transport-level error (for debug page & error details). */
+function api_last_error(): string
+{
+    return isset($GLOBALS['mv_last_error']) ? (string)$GLOBALS['mv_last_error'] : '';
+}
+
+/**
+ * Raw HTTP GET: cURL first (with a no-follow retry for open_basedir hosts),
+ * then file_get_contents. Returns body or null; records the cause in
+ * api_last_error() so debug.php / the UI can show exactly what failed.
+ */
 function http_get(string $url, int $timeout = 20): ?string
 {
-    $headers = "Accept: application/json\r\nUser-Agent: Movia/1.0 (+https://movia.local)\r\n";
+    $GLOBALS['mv_last_error'] = '';
+    $errors = [];
+    $headers = "Accept: application/json\r\nUser-Agent: Movia/1.0\r\n";
+    $verify = defined('API_SSL_VERIFY') ? API_SSL_VERIFY : true;
 
     if (function_exists('curl_init')) {
-        $ch = curl_init($url);
-        curl_setopt_array($ch, [
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT        => $timeout,
-            CURLOPT_CONNECTTIMEOUT => 8,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_MAXREDIRS      => 3,
-            CURLOPT_USERAGENT      => 'Movia/1.0',
-            CURLOPT_HTTPHEADER     => ['Accept: application/json'],
-        ]);
-        $body = curl_exec($ch);
-        // curl_close() is a no-op (and deprecated) on PHP >= 8.0.
-        if (PHP_VERSION_ID < 80000) {
-            curl_close($ch);
+        // Pass 1: follow redirects. Pass 2: no follow — some shared hosts
+        // (open_basedir) reject CURLOPT_FOLLOWLOCATION and abort the request.
+        foreach ([true, false] as $follow) {
+            $ch = curl_init($url);
+            curl_setopt_array($ch, [
+                CURLOPT_RETURNTRANSFER   => true,
+                CURLOPT_TIMEOUT          => $timeout,
+                CURLOPT_CONNECTTIMEOUT    => 8,
+                CURLOPT_FOLLOWLOCATION   => $follow,
+                CURLOPT_MAXREDIRS        => 3,
+                CURLOPT_USERAGENT        => 'Movia/1.0',
+                CURLOPT_HTTPHEADER       => ['Accept: application/json'],
+                CURLOPT_SSL_VERIFYPEER   => $verify,
+                CURLOPT_SSL_VERIFYHOST   => $verify ? 2 : 0,
+            ]);
+            $body = curl_exec($ch);
+            $errno = curl_errno($ch);
+            $cerr = curl_error($ch);
+            $code = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            // curl_close() is a no-op (and deprecated) on PHP >= 8.0.
+            if (PHP_VERSION_ID < 80000) {
+                curl_close($ch);
+            }
+            if ($body !== false) {
+                $GLOBALS['mv_last_http_code'] = $code;
+                if ($code >= 400 && $body === '') {
+                    $errors[] = "HTTP $code (empty body)";
+                    continue;
+                }
+                return $body;
+            }
+            $errors[] = 'curl' . ($follow ? '[follow]' : '[nofollow]') . " [$errno] $cerr";
         }
-        if ($body !== false) {
-            return $body;
-        }
+    } else {
+        $errors[] = 'curl extension not available';
     }
 
     if (ini_get('allow_url_fopen')) {
         $ctx = stream_context_create([
             'http' => [
-                'timeout'     => $timeout,
-                'header'      => $headers,
+                'timeout'      => $timeout,
+                'header'       => $headers,
                 'ignore_errors' => true,
+            ],
+            'ssl' => [
+                'verify_peer'      => $verify,
+                'verify_peer_name' => $verify,
             ],
         ]);
         $body = @file_get_contents($url, false, $ctx);
         if ($body !== false) {
+            $code = 0;
+            $rh = $http_response_header ?? [];
+            if ($rh && preg_match('#HTTP/\S+\s+(\d{3})#', $rh[0], $m)) {
+                $code = (int)$m[1];
+            }
+            $GLOBALS['mv_last_http_code'] = $code;
             return $body;
         }
+        $le = error_get_last();
+        $errors[] = 'file_get_contents: ' . ($le['message'] ?? 'unknown error');
+    } else {
+        $errors[] = 'allow_url_fopen disabled';
     }
 
+    $GLOBALS['mv_last_error'] = implode(' | ', array_unique($errors));
     return null;
 }
 
@@ -84,15 +129,24 @@ function api_get(string $endpoint, array $params = [], int $timeout = 20): ?arra
 
     $body = http_get($url, $timeout);
     if ($body === null) {
+        $GLOBALS['mv_last_error'] = trim('API fetch failed (' . $endpoint . '): ' . api_last_error());
         return null;
     }
     $data = json_decode($body, true);
     if (!is_array($data)) {
+        $snippet = trim(preg_replace('/\s+/', ' ', substr($body, 0, 160)));
+        $httpCode = isset($GLOBALS['mv_last_http_code']) ? (int)$GLOBALS['mv_last_http_code'] : 0;
+        $GLOBALS['mv_last_error'] = sprintf(
+            'API returned non-JSON (HTTP %d): %s',
+            $httpCode,
+            $snippet !== '' ? $snippet : '(empty body)'
+        );
         return null;
     }
     if ($cacheFile !== null) {
         @file_put_contents($cacheFile, $body);
     }
+    $GLOBALS['mv_last_error'] = '';
     return $data;
 }
 
@@ -109,6 +163,16 @@ function api_error_message(?array $data): string
         return 'Could not reach the server. Please try again in a moment.';
     }
     return isset($data['error']) ? (string)$data['error'] : 'Something went wrong.';
+}
+
+/** Short technical cause shown collapsed under error banners (debug aid). */
+function api_error_details(?array $data): string
+{
+    if ($data === null) {
+        $t = api_last_error();
+        return $t !== '' ? $t : 'No detail captured (cURL missing and allow_url_fopen off?)';
+    }
+    return json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 }
 
 /** Convert an absolute moviesmod URL to an internal explore path. */

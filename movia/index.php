@@ -56,12 +56,21 @@ require __DIR__ . '/includes/header.php';
   </div>
 
   <?php if ($error): ?>
-    <div class="alert alert-danger glass-alert d-flex align-items-center justify-content-between flex-wrap gap-2" role="alert">
+    <div class="alert alert-danger glass-alert js-fallback-hide d-flex align-items-center justify-content-between flex-wrap gap-2" role="alert">
       <span><i class="bi bi-exclamation-triangle me-2"></i><?= e($error) ?></span>
       <a class="btn btn-sm btn-outline-light" href="index.php<?= $page > 1 ? '?page=' . $page : '' ?>">Retry</a>
     </div>
+    <details class="tech-details js-fallback-hide mb-3">
+      <summary>Technical details</summary>
+      <code><?= e(api_error_details($data)) ?></code>
+    </details>
     <?php if (isset($data['status']) && (int)$data['status'] === 429): ?>
       <p class="text-muted small">Rate limit hit — the free worker tier allows a limited number of requests. Try again shortly.</p>
+    <?php endif; ?>
+    <?php if ($data === null): ?>
+      <!-- Server couldn't fetch the API: the browser will try the worker directly. -->
+      <div id="jsFallback" data-kind="grid" data-endpoint="home"
+           data-params="<?= e(json_encode(['page' => $page])) ?>"></div>
     <?php endif; ?>
   <?php elseif (!$items): ?>
     <div class="empty-state glass">

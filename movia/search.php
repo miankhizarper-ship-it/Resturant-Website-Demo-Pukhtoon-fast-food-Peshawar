@@ -56,10 +56,19 @@ require __DIR__ . '/includes/header.php';
       <p>Type a movie or series name above to begin.</p>
     </div>
   <?php elseif ($error): ?>
-    <div class="alert alert-danger glass-alert mt-4 d-flex align-items-center justify-content-between flex-wrap gap-2" role="alert">
+    <div class="alert alert-danger glass-alert mt-4 js-fallback-hide d-flex align-items-center justify-content-between flex-wrap gap-2" role="alert">
       <span><i class="bi bi-exclamation-triangle me-2"></i><?= e($error) ?></span>
       <a class="btn btn-sm btn-outline-light" href="search.php?q=<?= urlencode($q) ?>">Retry</a>
     </div>
+    <details class="tech-details js-fallback-hide mb-3">
+      <summary>Technical details</summary>
+      <code><?= e(api_error_details($data)) ?></code>
+    </details>
+    <?php if ($data === null): ?>
+      <!-- Server couldn't fetch the API: the browser will try the worker directly. -->
+      <div id="jsFallback" data-kind="grid" data-endpoint="search"
+           data-params="<?= e(json_encode(['q' => $q, 'page' => $page])) ?>"></div>
+    <?php endif; ?>
   <?php else: ?>
     <div class="section-head mt-4">
       <h2>Results for “<?= e($q) ?>” <span class="text-muted fs-6">(page <?= $page ?>)</span></h2>

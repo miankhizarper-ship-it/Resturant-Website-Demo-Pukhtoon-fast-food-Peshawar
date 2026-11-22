@@ -38,14 +38,23 @@ require __DIR__ . '/includes/header.php';
 
 <section class="container section-pad">
   <?php if ($error): ?>
-    <div class="empty-state glass">
+    <div class="empty-state glass js-fallback-hide">
       <i class="bi bi-emoji-frown"></i>
       <p><?= e($error) ?></p>
       <div class="d-flex gap-2 justify-content-center">
         <a class="btn btn-outline-light btn-sm" href="index.php">Home</a>
         <a class="btn btn-accent btn-sm" href="detail.php?id=<?= e(urlencode($id)) ?>">Retry</a>
       </div>
+      <details class="tech-details mt-3 text-start">
+        <summary>Technical details</summary>
+        <code><?= e(api_error_details($data)) ?></code>
+      </details>
     </div>
+    <?php if ($data === null): ?>
+      <!-- Server couldn't fetch the API: the browser will try the worker directly. -->
+      <div id="jsFallback" data-kind="detail" data-endpoint="detail"
+           data-params="<?= e(json_encode(['id' => $id])) ?>"></div>
+    <?php endif; ?>
   <?php else: ?>
     <nav aria-label="breadcrumb" class="mb-3">
       <ol class="breadcrumb glass-crumb">

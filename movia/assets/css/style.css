@@ -470,3 +470,29 @@ a:hover { color: #ff9494; }
   .nav-search { min-width: 100%; margin-top: .6rem; }
   .movia-nav .navbar-collapse { padding-bottom: .8rem; }
 }
+
+/* ---------- Debug / tech details under error banners ---------- */
+.tech-details {
+  background: rgba(148, 163, 184, .06);
+  border: 1px solid var(--mv-border);
+  border-radius: 10px;
+  padding: .55rem .85rem;
+  font-size: .82rem;
+  color: var(--mv-muted);
+}
+.tech-details summary { cursor: pointer; user-select: none; font-weight: 600; }
+.tech-details summary:hover { color: #e2e8f0; }
+.tech-details code {
+  display: block;
+  margin-top: .5rem;
+  padding: .5rem .6rem;
+  background: #0b0f1a;
+  border: 1px solid var(--mv-border);
+  border-radius: 8px;
+  color: #fca5a5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: .78rem;
+  line-height: 1.5;
+}
+.tech-details[open] summary { margin-bottom: .25rem; color: #e2e8f0; }

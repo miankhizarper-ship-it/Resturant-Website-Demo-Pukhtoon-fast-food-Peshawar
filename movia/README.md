@@ -18,6 +18,7 @@ Modern, responsive movie/series website (HTML + CSS + JS + PHP) powered by the
 | `explore.php?path=/movies/hollywood/` | Category listing + chips |
 | `detail.php?id=slug` | Detail page + **download flow** |
 | `api.php` | JSON proxy to the scraper worker (with cache) |
+| `debug.php` | Connectivity diagnostics (open when pages show errors) |
 | `404.php` | Custom not-found page |
 
 ## Download flow
@@ -57,6 +58,28 @@ Open http://localhost:8080
 - `cache/` must stay writable (default `0755`); if not writable, caching silently disables.
 - The API URL lives in `config.php` — change it there if your worker URL changes.
 - Free-tier worker limits apply (the scraper returns `429` when rate-limited; the UI shows a friendly retry).
+
+## Troubleshooting: "Could not reach the server"
+
+If pages render but every request shows *"Could not reach the server. Please try
+again in a moment."*, the **host's PHP** couldn't fetch the worker (outbound
+block, DNS, SSL, or no curl/fopen). Two things help:
+
+1. **Open `https://your-site/debug.php`** — it shows exactly which step fails
+   (DNS, cURL, `allow_url_fopen`, SSL, live `/api/home` test, cache writability)
+   plus the raw transport error. If it says *SSL certificate problem*, set
+   `define('API_SSL_VERIFY', false);` in `config.php`.
+
+2. **The site still works without server-side fetching.** Every page detects the
+   failure and the **browser calls the worker directly** (the worker sends
+   `Access-Control-Allow-Origin: *`), rendering the same content client-side —
+   grids, detail pages, search suggestions, and the full download flow.
+   Error banners include a collapsible **Technical details** block with the
+   raw cause, so you can paste it into a support ticket.
+
+The fallback order is: `api.php` (server proxy, cached) → worker direct from
+the visitor's browser. Validation errors (400) and worker answers (404/429)
+are never retried, so the free-tier rate limit isn't double-spent.
 
 ## Configuration
 
