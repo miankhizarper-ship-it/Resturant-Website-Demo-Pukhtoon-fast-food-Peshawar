@@ -1,0 +1,16 @@
+{
+  "name": "moviesmod-scraper",
+  "version": "0.1.0",
+  "description": "Node.js scraper for moviesmod.fi - works locally and is ready for Cloudflare Workers",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "node src/server.js",
+    "mock": "node mock/server.js",
+    "dev": "node scripts/dev.js",
+    "test": "node --test \"test/*.test.js\""
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
