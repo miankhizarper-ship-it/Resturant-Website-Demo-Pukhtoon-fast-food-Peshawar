@@ -44,6 +44,43 @@ require __DIR__ . '/includes/header.php';
     <?php endforeach; ?>
   </div>
 
+  <?php
+  // Auto-open the filter panel when the current path belongs to one of its groups.
+  $filterOpen = false;
+  foreach (EXPLORE_FILTERS as $fLinks) {
+      foreach ($fLinks as [, $fPath]) {
+          if ($fPath === $path) {
+              $filterOpen = true;
+              break 2;
+          }
+      }
+  }
+  ?>
+  <div class="filter-panel glass mb-4">
+    <button class="filter-toggle" type="button" data-bs-toggle="collapse"
+            data-bs-target="#filterBody" aria-expanded="<?= $filterOpen ? 'true' : 'false' ?>"
+            aria-controls="filterBody">
+      <i class="bi bi-funnel"></i>
+      More filters
+      <span class="filter-hint">genre · language · year · size</span>
+      <i class="bi bi-chevron-down filter-caret"></i>
+    </button>
+    <div class="collapse<?= $filterOpen ? ' show' : '' ?>" id="filterBody">
+      <div class="filter-body">
+        <?php foreach (EXPLORE_FILTERS as $group => $fLinks): ?>
+          <div class="filter-group">
+            <span class="filter-label"><?= e($group) ?></span>
+            <div class="chip-row">
+              <?php foreach ($fLinks as [$label, $p]): ?>
+                <a class="chip<?= $p === $path ? ' chip-active' : '' ?>" href="explore.php?path=<?= urlencode($p) ?>"><?= e($label) ?></a>
+              <?php endforeach; ?>
+            </div>
+          </div>
+        <?php endforeach; ?>
+      </div>
+    </div>
+  </div>
+
   <?php if ($error): ?>
     <div class="alert alert-danger glass-alert js-fallback-hide d-flex align-items-center justify-content-between flex-wrap gap-2" role="alert">
       <span><i class="bi bi-exclamation-triangle me-2"></i><?= e($error) ?></span>

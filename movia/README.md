@@ -15,21 +15,22 @@ Modern, responsive movie/series website (HTML + CSS + JS + PHP) powered by the
 |---|---|
 | `index.php` | Home — hero + latest movies + "Load more" |
 | `search.php?q=…` | Search results (server-rendered) |
-| `explore.php?path=/movies/hollywood/` | Category listing + chips |
-| `detail.php?id=slug` | Detail page + **download flow** |
+| `explore.php?path=/movies/hollywood/` | Category listing + chips + collapsible filters |
+| `detail.php?id=slug` | Detail page + download links (plain redirects to source) |
+| `about.php` | About Movia |
+| `privacy.php` | Privacy policy |
+| `terms.php` | Terms of use |
 | `api.php` | JSON proxy to the scraper worker (with cache) |
 | `debug.php` | Connectivity diagnostics (open when pages show errors) |
 | `404.php` | Custom not-found page |
 
 ## Download flow
 
-```
-detail.php buttons (Episode Links / Batch / Server)
-  └─► GET api.php?endpoint=source&url=https://episodes.modpro.blog/archives/…
-       └─► user picks episode/server
-            └─► GET api.php?endpoint=generate&url=https://en.thenaukriadda.in/?sid=…
-                 └─► final direct download URL (Download now / Copy)
-```
+Download buttons on the detail page are **plain links** (`<a href="…">`) to the
+source "get link" page. Clicking one redirects the visitor there, where they
+pick the episode/server themselves — Movia never scrapes or generates the final
+link. The old `endpoint=source` / `endpoint=generate` AJAX flow was removed;
+`api.php` now serves `home | search | explore | detail` only.
 
 ## Run locally
 
@@ -73,7 +74,7 @@ block, DNS, SSL, or no curl/fopen). Two things help:
 2. **The site still works without server-side fetching.** Every page detects the
    failure and the **browser calls the worker directly** (the worker sends
    `Access-Control-Allow-Origin: *`), rendering the same content client-side —
-   grids, detail pages, search suggestions, and the full download flow.
+   grids, detail pages, search suggestions, and download links.
    Error banners include a collapsible **Technical details** block with the
    raw cause, so you can paste it into a support ticket.
 
@@ -86,9 +87,10 @@ are never retried, so the free-tier rate limit isn't double-spent.
 `config.php`:
 
 ```php
-API_BASE      // scraper worker URL
-CACHE_TTL     // seconds of static cache (0 = off)
-NAV_CATEGORIES// navbar explore links
+API_BASE        // scraper worker URL
+CACHE_TTL       // seconds of static cache (0 = off)
+NAV_CATEGORIES  // navbar explore links
+EXPLORE_FILTERS // collapsible filter groups on the explore page
 ```
 
 Local override without editing the file:
@@ -102,10 +104,11 @@ MOVIA_API=http://127.0.0.1:8787 php -S localhost:8080
 ```
 movia/
 ├── index.php  search.php  explore.php  detail.php
+├── about.php  privacy.php  terms.php
 ├── api.php  404.php  config.php
 ├── includes/
-│   ├── functions.php   # API client + cache + rendering helpers
-│   ├── header.php      # <head> + navbar (live search)
+│   ├── functions.php   # API client + cache + rendering + logo helper
+│   ├── header.php      # <head> + splash + navbar (live search)
 │   └── footer.php      # footer + scripts
 ├── assets/
 │   ├── css/  bootstrap.min.css, bootstrap-icons.min.css, style.css

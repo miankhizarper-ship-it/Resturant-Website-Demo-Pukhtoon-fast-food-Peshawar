@@ -103,7 +103,7 @@ function http_get(string $url, int $timeout = 20): ?string
 /**
  * Call the Movia scraper API.
  *
- * @param string $endpoint home|search|explore|detail|source|generate
+ * @param string $endpoint home|search|explore|detail
  * @param array  $params   query params
  * @return array|null decoded JSON or null on failure
  */
@@ -300,4 +300,27 @@ function render_skeleton(int $count = 10): void
             . '<div class="skeleton shimmer sk-line w-50 mt-2"></div></div></div></div>';
     }
     echo '</div>';
+}
+
+/** Inline SVG logo (theme-matched film-frame + play mark). $uid keeps gradient ids unique per instance. */
+function movia_logo_svg(string $uid = 'a'): string
+{
+    $g = 'mvg-' . $uid;
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" role="img" aria-label="Movia">'
+        . '<defs><linearGradient id="' . $g . '" x1="6" y1="4" x2="58" y2="60" gradientUnits="userSpaceOnUse">'
+        . '<stop stop-color="#e50914"/><stop offset="1" stop-color="#ff6b6b"/></linearGradient></defs>'
+        . '<rect x="2" y="2" width="60" height="60" rx="15" fill="url(#' . $g . ')"/>'
+        . '<g fill="#fff" fill-opacity=".6">'
+        . '<rect x="7" y="9.5" width="5.5" height="6.5" rx="1.6"/>'
+        . '<rect x="7" y="22.3" width="5.5" height="6.5" rx="1.6"/>'
+        . '<rect x="7" y="35.2" width="5.5" height="6.5" rx="1.6"/>'
+        . '<rect x="7" y="48" width="5.5" height="6.5" rx="1.6"/>'
+        . '<rect x="51.5" y="9.5" width="5.5" height="6.5" rx="1.6"/>'
+        . '<rect x="51.5" y="22.3" width="5.5" height="6.5" rx="1.6"/>'
+        . '<rect x="51.5" y="35.2" width="5.5" height="6.5" rx="1.6"/>'
+        . '<rect x="51.5" y="48" width="5.5" height="6.5" rx="1.6"/>'
+        . '</g>'
+        . '<path d="M23 20.5 41 32 23 43.5Z" fill="#fff" stroke="#fff" stroke-width="3.2" stroke-linejoin="round"/>'
+        . '<path d="M17 2h30a15 15 0 0 1 15 15v7H2v-7A15 15 0 0 1 17 2Z" fill="#fff" fill-opacity=".10"/>'
+        . '</svg>';
 }
