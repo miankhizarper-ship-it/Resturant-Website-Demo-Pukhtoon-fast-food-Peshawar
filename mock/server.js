@@ -14,6 +14,14 @@ const server = http.createServer(async (req, res) => {
   try {
     const u = new URL(req.url, `http://127.0.0.1:${PORT}`);
     const result = await route(u.pathname, u.search, req.method);
+    if (result.redirect) {
+      res.writeHead(result.status || 302, {
+        location: result.redirect,
+        'access-control-allow-origin': '*',
+      });
+      res.end();
+      return;
+    }
     res.writeHead(result.status || 200, {
       'content-type': result.type,
       'access-control-allow-origin': '*',

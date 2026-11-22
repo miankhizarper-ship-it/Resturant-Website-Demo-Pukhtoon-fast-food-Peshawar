@@ -1,15 +1,41 @@
-// Parses the en.thenaukriadda.in "link generator" hop page.
+// Parses the en.thenaukriadda.in "link generator" hop pages.
 //
-// Flow observed in the saved source:
-//   GET  https://en.thenaukriadda.in/?sid=<b64>
-//        -> page with #lp-stage1, a 10s timer and a hidden form
-//           (#lp-s1-form) POSTing to /from-chips-to-cloud/ with fields:
-//           _lp_http2, _lp_token, _lp_chain, _lp_hop_index
-//   POST the form -> next hop page (more stages) -> ... -> final download URL.
-//
-// The parser extracts the form so the resolver can follow the chain.
+// Full flow observed in the saved sources (DownloadPageTimerSteps.txt):
+//   1. GET  /?sid=<b64>
+//        -> #lp-stage1: 10s timer + hidden form (#lp-s1-form) POSTing to an
+//           article URL with fields _lp_http2, _lp_token, _lp_chain,
+//           _lp_hop_index.  (parseHopForm)
+//   2. POST the form -> article page with #lp-stage2: a "Generate link"
+//        button + countdown + "Go to download" anchor.  ALL client-side JS —
+//        no form.  The target URL and a companion cookie are embedded in the
+//        page source:
+//          bg.setAttribute('href',"https:\/\/…\/?lp_go=lp-6b02c58d27e2b");
+//          sc("lp-6b02c58d27e2b","<b64>",60);
+//      (parseLpGo)
+//   3. GET /?lp_go=lp-… (with the cookie) -> 302 to a file landing page
+//      (e.g. driveseed.org/file/…) whose "Cloud Download" button carries the
+//      direct file URL.  (findFinalLink + looksDirect in the resolver)
 
 import { decodeEntities, stripTags, getAttr } from './html.js';
+
+/** Hosts that ARE the final file (no further page to parse). */
+export const DIRECT_HOST_RE =
+  /drive\.google\.com|drive\.usercontent\.google\.com|dropbox\.com|mega\.nz|mediafire\.com|gofile\.io|pixeldrain|1fichier|file\.io|workupload|terabox|r2\.dev/i;
+
+/** Scoring list: anchors on these hosts are download candidates. */
+const FILE_HOST_RE =
+  /drive\.google\.com|drive\.usercontent\.google\.com|dropbox\.com|mega\.nz|mediafire\.com|gofile\.io|pixeldrain|1fichier|file\.io|workupload|terabox|gdrivepro|urlflix|r2\.dev/i;
+
+/** True when the URL itself is a direct file link (skip page parsing). */
+export function looksDirect(url) {
+  if (DIRECT_HOST_RE.test(url)) return true;
+  try {
+    const p = new URL(url).pathname;
+    return /\.(zip|rar|7z|mkv|mp4|avi|mov|exe|iso|pdf|epub|mp3|flac|wav|tgz|gz|tar)$/i.test(p);
+  } catch {
+    return false;
+  }
+}
 
 /**
  * Find the next POST form to follow.
@@ -96,10 +122,7 @@ export function findFinalLink(html, pageUrl) {
       /download|get\s*link|go\s*to\s*file|fetch|continue|fast\s*server|g-?drive|onedrive/i.test(
         text + ' ' + cls
       );
-    const isFileHost =
-      /drive\.google\.com|drive\.usercontent\.google\.com|dropbox\.com|mega\.nz|mediafire\.com|gofile\.io|pixeldrain|1fichier|file\.io|workupload|terabox|gdrivepro|urlflix/i.test(
-        href
-      );
+    const isFileHost = FILE_HOST_RE.test(href);
     if (isDownloadish || isFileHost) {
       candidates.push({ href, text, weight: (isFileHost ? 2 : 0) + (isDownloadish ? 1 : 0) });
     }
@@ -116,6 +139,37 @@ export function findFinalLink(html, pageUrl) {
   if (js && /^https?:/i.test(js[1])) return js[1];
 
   return null;
+}
+
+/**
+ * Stage-2 pages carry no form: the next hop is a `?lp_go=lp-…` URL embedded
+ * in JS, plus a companion cookie set by `sc("lp-…","<b64>",60)`.
+ * Timers/buttons are pure client-side — the resolver must not wait.
+ *
+ * Source (saved page, one occurrence per step):
+ *   bg.setAttribute('href',"https:\/\/en.thenaukriadda.in\/?lp_go=lp-6b02c58d27e2b");
+ *   sc("lp-6b02c58d27e2b","eJwNzEFy…",60);
+ *
+ * @returns {{url: string, cookie: {name: string, value: string}|null}|null}
+ */
+export function parseLpGo(html) {
+  // 1) next-hop URL (JS string, \/ escaped)
+  const urlMatch = html.match(/["'](https?:[^"'<> ]*lp_go=[^"'<> ]+)["']/i);
+  if (!urlMatch) return null;
+  const url = urlMatch[1].replace(/\\\//g, '/');
+  const token = (url.match(/[?&]lp_go=([^&#"']+)/) || [])[1] || null;
+
+  // 2) companion cookie — prefer the one whose name matches the lp_go token
+  const cookies = [
+    ...html.matchAll(/sc\(\s*["'](lp-[^"']+)["']\s*,\s*["']([^"']+)["']/g),
+  ];
+  let cm = token ? cookies.find((c) => c[1] === token) : null;
+  if (!cm) cm = cookies[0];
+  const cookie = cm
+    ? { name: cm[1], value: cm[2].replace(/\\\//g, '/') }
+    : null;
+
+  return { url, cookie };
 }
 
 export default parseHopForm;

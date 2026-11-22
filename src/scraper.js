@@ -5,7 +5,7 @@ import { BASE_URL, mapOrigin, isAllowedUrl, USER_AGENT } from './config.js';
 import { parseListing } from './parser/listing.js';
 import { parseDetail } from './parser/detail.js';
 import { parseSourcePage } from './parser/source.js';
-import { parseHopForm, findFinalLink } from './parser/hop.js';
+import { parseHopForm, findFinalLink, parseLpGo, looksDirect } from './parser/hop.js';
 
 export class ScraperError extends Error {
   constructor(message, status = 500) {
@@ -133,6 +133,14 @@ export async function scrapeSource(url, env = {}) {
 /**
  * Follow the en.thenaukriadda.in hop chain until a final download URL appears.
  * GET /api/generate?url=<hop url>
+ *
+ * Chain (from saved LinkPilot sources):
+ *   GET /?sid=…        -> stage-1 form (timer page)      [parseHopForm]
+ *   POST the form      -> stage-2 page, no form; next hop is an embedded
+ *                         `?lp_go=lp-…` URL + `sc("lp-…", cookie, 60)`
+ *                         (timers are client-side — never wait) [parseLpGo]
+ *   GET /?lp_go=…      -> 302 to a file landing page (driveseed.org/file/…)
+ *                         whose "Cloud Download" button is the direct file.
  */
 export async function generateDownloadLink(url, env = {}) {
   if (!url) throw new ScraperError('Missing url', 400);
@@ -141,18 +149,37 @@ export async function generateDownloadLink(url, env = {}) {
   }
   const maxHops = Number(env.SCRAPER_MAX_HOPS || 8);
   const hops = [];
+  const cookies = {}; // LinkPilot cookie jar (name -> value), hop-site only
   let current = url;
   let method = 'GET';
   let body = null;
+  let referer = null;
 
   for (let i = 0; i < maxHops; i++) {
-    const { text, finalUrl, target, redirected } = await fetchText(current, env, {
+    // Attach the stage-2 cookie + referer to hop-site requests only.
+    const headers = {};
+    try {
+      if (/thenaukriadda\.in$/i.test(new URL(current).hostname)) {
+        const cookieHeader = Object.entries(cookies)
+          .map(([k, v]) => `${k}=${v}`)
+          .join('; ');
+        if (cookieHeader) headers.cookie = cookieHeader;
+        if (referer) headers.referer = referer;
+      }
+    } catch {
+      /* ignore */
+    }
+
+    const { text, finalUrl, redirected } = await fetchText(current, env, {
       method,
       body,
+      headers,
     });
     hops.push({ step: i + 1, url: current, method, status: 'fetched' });
 
-    // If fetch followed a redirect off the hop site, that destination is final.
+    // If fetch followed a redirect off the hop site, that destination is the
+    // end of the chain — unless the landing page carries a better (direct)
+    // file link, e.g. driveseed.org "Cloud Download" -> r2.dev zip.
     if (redirected) {
       try {
         const fu = new URL(finalUrl);
@@ -162,6 +189,18 @@ export async function generateDownloadLink(url, env = {}) {
         const onMock =
           env.SCRAPER_MOCK_ORIGIN && finalUrl.startsWith(env.SCRAPER_MOCK_ORIGIN);
         if (!onHopSite && !onMock) {
+          if (looksDirect(finalUrl)) {
+            hops.push({ step: i + 1, url: finalUrl, method: 'redirect', status: 'final' });
+            return { type: 'generate', downloadUrl: finalUrl, hops, hopsUsed: i + 1 };
+          }
+          const direct = findFinalLink(text, finalUrl);
+          if (direct) {
+            const abs = new URL(direct, finalUrl).toString();
+            if (!isSamePage(abs, finalUrl)) {
+              hops.push({ step: i + 1, url: abs, method: 'found', status: 'final' });
+              return { type: 'generate', downloadUrl: abs, hops, hopsUsed: i + 1 };
+            }
+          }
           hops.push({ step: i + 1, url: finalUrl, method: 'redirect', status: 'final' });
           return { type: 'generate', downloadUrl: finalUrl, hops, hopsUsed: i + 1 };
         }
@@ -178,29 +217,50 @@ export async function generateDownloadLink(url, env = {}) {
     }
 
     const form = parseHopForm(text);
-    if (!form) {
-      hops.push({ step: i + 1, url: current, method: 'GET', status: 'no-form' });
-      throw new ScraperError('No further hop form or download link found', 502);
+    if (form) {
+      // Optional client-side timer wait (default off for speed; env-tunable).
+      const waitSec = Number(env.SCRAPER_HOP_WAIT ?? 0);
+      if (waitSec > 0 && form.timerSeconds) {
+        await new Promise((r) => setTimeout(r, Math.min(waitSec, 30) * 1000));
+      }
+
+      const actionAbs = new URL(form.action, finalUrl).toString();
+      hops.push({
+        step: i + 1,
+        url: actionAbs,
+        method: 'POST',
+        status: 'hop',
+        fields: Object.keys(form.fields),
+        stage: form.stage,
+      });
+      referer = finalUrl;
+      current = actionAbs;
+      method = 'POST';
+      body = new URLSearchParams(form.fields).toString();
+      continue;
     }
 
-    // Optional client-side timer wait (default off for speed; env-tunable).
-    const waitSec = Number(env.SCRAPER_HOP_WAIT ?? 0);
-    if (waitSec > 0 && form.timerSeconds) {
-      await new Promise((r) => setTimeout(r, Math.min(waitSec, 30) * 1000));
+    // Stage-2: no form — next hop is the embedded ?lp_go= URL (+ cookie).
+    const lpGo = parseLpGo(text);
+    if (lpGo && isAllowedUrl(lpGo.url, env)) {
+      if (lpGo.cookie) cookies[lpGo.cookie.name] = lpGo.cookie.value;
+      const next = new URL(lpGo.url, finalUrl).toString();
+      hops.push({
+        step: i + 1,
+        url: next,
+        method: 'GET',
+        status: 'lp-go',
+        cookie: lpGo.cookie ? lpGo.cookie.name : null,
+      });
+      referer = finalUrl;
+      current = next;
+      method = 'GET';
+      body = null;
+      continue;
     }
 
-    const actionAbs = new URL(form.action, finalUrl).toString();
-    current = actionAbs;
-    method = 'POST';
-    body = new URLSearchParams(form.fields).toString();
-    hops.push({
-      step: i + 1,
-      url: actionAbs,
-      method: 'POST',
-      status: 'hop',
-      fields: Object.keys(form.fields),
-      stage: form.stage,
-    });
+    hops.push({ step: i + 1, url: current, method, status: 'no-form' });
+    throw new ScraperError('No further hop form or download link found', 502);
   }
 
   throw new ScraperError(`Max hops (${maxHops}) exceeded`, 502);

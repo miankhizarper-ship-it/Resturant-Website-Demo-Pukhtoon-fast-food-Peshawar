@@ -9,7 +9,7 @@ import { dirname, join } from 'node:path';
 import { parseListing } from '../src/parser/listing.js';
 import { parseDetail } from '../src/parser/detail.js';
 import { parseSourcePage } from '../src/parser/source.js';
-import { parseHopForm, findFinalLink } from '../src/parser/hop.js';
+import { parseHopForm, findFinalLink, parseLpGo, looksDirect } from '../src/parser/hop.js';
 
 const FIX = join(dirname(fileURLToPath(import.meta.url)), 'fixtures');
 const load = (n) => readFile(join(FIX, n), 'utf8');
@@ -140,6 +140,30 @@ test('findFinalLink picks download-ish anchors', () => {
   </body></html>`;
   const link = findFinalLink(html, 'https://en.thenaukriadda.in/from-chips-to-cloud/');
   assert.equal(link, 'https://drive.google.com/uc?id=abc&export=download');
+});
+
+test('stage-2 has no hop form but exposes lp_go URL + cookie', async () => {
+  const html = await load('hop-stage2.html');
+  // No form to POST — this was the 'No further hop form' failure.
+  assert.equal(parseHopForm(html), null);
+  const lp = parseLpGo(html);
+  assert.ok(lp, 'lp_go extracted');
+  assert.equal(lp.url, 'https://en.thenaukriadda.in/?lp_go=lp-6b02c58d27e2b');
+  assert.ok(lp.cookie, 'companion cookie extracted');
+  assert.equal(lp.cookie.name, 'lp-6b02c58d27e2b');
+  assert.ok(lp.cookie.value.length > 100, 'cookie value present');
+  assert.ok(!lp.cookie.value.includes('\\'), 'cookie value unescaped');
+  assert.equal(parseLpGo(await load('hop-stage1.html')), null, 'stage-1 has no lp_go');
+});
+
+test('file landing page resolves to direct r2.dev file link', async () => {
+  const html = await load('filepage-driveseed.html');
+  const link = findFinalLink(html, 'https://driveseed.org/file/FOXdH1jTEUHBrZT62tCF');
+  assert.ok(link, 'download anchor found');
+  assert.match(link, /^https:\/\/pub-.*\.r2\.dev\/.*\.zip$/);
+  assert.ok(looksDirect(link), 'r2.dev zip is direct');
+  assert.ok(!looksDirect('https://driveseed.org/file/FOXdH1jTEUHBrZT62tCF'), 'landing page is not direct');
+  assert.ok(looksDirect('https://drive.google.com/uc?id=abc&export=download'), 'google drive is direct');
 });
 
 test('menu links fixture exposes explore paths', async () => {
