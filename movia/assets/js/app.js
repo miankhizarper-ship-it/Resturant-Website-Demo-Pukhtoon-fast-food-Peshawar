@@ -1,7 +1,7 @@
 /* ==========================================================================
    Movia — front-end app
    - live search suggestions
-   - detail download flow: /api/source  ->  /api/generate  ->  final link
+   - detail download buttons: plain links to the source ("get link") page
    - load-more grid paging
    - server-error fallback: if api.php (PHP -> worker) fails, the browser
      calls the worker directly (worker sends CORS: *) and renders the page
@@ -211,166 +211,6 @@
     input.addEventListener('keydown', function (ev) { if (ev.key === 'Escape') hide(); });
   })();
 
-  /* ---------------- detail: download flow (document-delegated) -------------
-     Delegation (not bound to #downloadPanel) so it also works for panels
-     rendered later by the browser-direct fallback. */
-
-  function kindIcon(kind, label) {
-    var s = (kind || '') + ' ' + (label || '');
-    if (/batch|zip/i.test(s)) return 'bi-file-earmark-zip';
-    if (/episode/i.test(s)) return 'bi-list-ol';
-    if (/onedrive/i.test(s)) return 'bi-cloud';
-    if (/g-?direct|gdrive|drive|server/i.test(s)) return 'bi-google';
-    if (/other/i.test(s)) return 'bi-link-45deg';
-    return 'bi-download';
-  }
-
-  document.addEventListener('click', async function (ev) {
-    var btn = ev.target.closest('.btn-dl[data-source-url]');
-    if (!btn || btn.disabled) return;
-    var panel = btn.closest('#downloadPanel');
-    if (!panel) return;
-
-    var group = btn.closest('.dl-group');
-    var result = group ? group.querySelector('.dl-result') : null;
-    if (!result) return;
-
-    // Close other groups' results (accordion feel)
-    $$('.dl-result', panel).forEach(function (r) {
-      if (r !== result) { r.hidden = true; r.innerHTML = ''; }
-    });
-
-    // Toggle this group
-    if (!result.hidden && result.dataset.url === btn.dataset.sourceUrl) {
-      result.hidden = true;
-      result.innerHTML = '';
-      return;
-    }
-
-    var sourceUrl = btn.dataset.sourceUrl;
-    result.dataset.url = sourceUrl;
-    result.hidden = false;
-    result.innerHTML =
-      '<div class="dl-steps">' +
-      '<div class="dl-step active" data-step="1"><span class="dot"></span> Fetching available links…</div>' +
-      '<div class="dl-step" data-step="2"><span class="dot"></span> Waiting for you to pick a server / episode</div>' +
-      '<div class="dl-step" data-step="3"><span class="dot"></span> Generating direct download link</div>' +
-      '</div>';
-
-    $$('.btn-dl', group).forEach(function (b) { b.classList.add('loading'); });
-
-    try {
-      var src = await callApi('source', { url: sourceUrl }, 35000);
-      var links = Array.isArray(src.links) ? src.links : [];
-      if (!links.length) throw new Error('No links found on this page.');
-
-      var steps = $('.dl-steps', result);
-      if (steps) {
-        steps.querySelector('[data-step="1"]').classList.replace('active', 'done');
-        steps.querySelector('[data-step="2"]').classList.add('active');
-      }
-
-      var list = document.createElement('div');
-      list.className = 'source-list mt-2';
-      list.innerHTML = links.map(function (l, i) {
-        return '<button type="button" class="source-item" data-url="' + esc(l.url) + '" data-index="' + i + '">' +
-          '<span class="si-label"><i class="bi ' + (kindIcon(l.kind, l.label)) + '"></i>' +
-          '<span>' + esc(l.label || ('Link ' + (i + 1))) + '</span></span>' +
-          '<span class="si-go">Get link</span></button>';
-      }).join('');
-      result.appendChild(list);
-
-      list.addEventListener('click', function (e2) {
-        var item = e2.target.closest('.source-item');
-        if (!item || item.disabled) return;
-        resolveSource(item, list, result, steps);
-      });
-
-    } catch (err) {
-      result.innerHTML = '<p class="error-line"><i class="bi bi-x-circle"></i> ' + esc(err.message) +
-        ' <button type="button" class="btn btn-outline-light btn-sm ms-2" data-retry>Retry</button></p>';
-      $('[data-retry]', result).addEventListener('click', function () {
-        result.hidden = true;
-        btn.click();
-      });
-    } finally {
-      $$('.btn-dl', group).forEach(function (b) { b.classList.remove('loading'); });
-    }
-  });
-
-  /* Step 2+3: user picked an item -> generate the final link */
-  async function resolveSource(item, list, result, steps) {
-    var url = item.dataset.url;
-    item.disabled = true;
-    var go = item.querySelector('.si-go');
-    if (go) go.innerHTML = '<span class="spinner-border spinner-border-sm" aria-hidden="true"></span>';
-
-    if (steps) {
-      var s2 = steps.querySelector('[data-step="2"]');
-      var s3 = steps.querySelector('[data-step="3"]');
-      if (s2) s2.classList.replace('active', 'done');
-      if (s3) s3.classList.add('active');
-    }
-
-    try {
-      var gen = await callApi('generate', { url: url }, 60000);
-      var finalUrl = gen && gen.downloadUrl;
-      if (!finalUrl) throw new Error('Could not generate a download link.');
-
-      if (steps) {
-        var s3b = steps.querySelector('[data-step="3"]');
-        if (s3b) s3b.classList.replace('active', 'done');
-      }
-
-      var label = item.querySelector('.si-label span');
-      var row = document.createElement('div');
-      row.className = 'final-link mt-2';
-      row.innerHTML =
-        '<div><div class="fl-title"><i class="bi bi-check-circle-fill me-1"></i>Ready: ' +
-        esc(label ? label.textContent : 'Download') + '</div>' +
-        '<small class="text-muted">' + esc(finalUrl.replace(/^https?:\/\//, '').slice(0, 70)) + '…</small></div>' +
-        '<div class="fl-actions">' +
-        '<a class="btn-success-grad" href="' + esc(finalUrl) + '" target="_blank" rel="noopener nofollow">' +
-        '<i class="bi bi-download"></i> Download now</a>' +
-        '<button type="button" class="btn btn-outline-light btn-sm" data-copy="' + esc(finalUrl) + '">' +
-        '<i class="bi bi-clipboard"></i> Copy</button></div>';
-
-      item.replaceWith(row);
-      toast('Download link ready!', 'success');
-    } catch (err) {
-      item.disabled = false;
-      if (go) go.textContent = 'Get link';
-      toast(err.message, 'error');
-      var errLine = document.createElement('p');
-      errLine.className = 'error-line mt-2';
-      errLine.innerHTML = '<i class="bi bi-x-circle"></i> ' + esc(err.message);
-      result.appendChild(errLine);
-      setTimeout(function () { errLine.remove(); }, 5000);
-    }
-  }
-
-  /* ---------------- copy buttons (delegated) ---------------- */
-
-  document.addEventListener('click', function (ev) {
-    var btn = ev.target.closest('[data-copy]');
-    if (!btn) return;
-    var text = btn.getAttribute('data-copy');
-    var done = function () { toast('Link copied to clipboard', 'success'); };
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(done).catch(function () { fallbackCopy(text, done); });
-    } else {
-      fallbackCopy(text, done);
-    }
-  });
-
-  function fallbackCopy(text, done) {
-    var ta = document.createElement('textarea');
-    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
-    document.body.appendChild(ta); ta.select();
-    try { document.execCommand('copy'); done(); } catch (e) { toast('Copy failed', 'error'); }
-    ta.remove();
-  }
-
   /* ---------------- load more (server-rendered home grid) ---------------- */
 
   (function initLoadMore() {
@@ -537,7 +377,7 @@
     var dlPanel =
       '<div class="download-panel glass p-3 p-md-4" id="downloadPanel">' +
       '<h2 class="h5 mb-1"><i class="bi bi-download text-accent me-1"></i>Download</h2>' +
-      '<p class="text-muted small mb-3">Pick a quality, then choose an episode or server — the direct link is generated for you.</p>';
+      '<p class="text-muted small mb-3">Choose a quality — you\'ll be taken to the download page to get your link.</p>';
     if (!groups.length) {
       dlPanel += '<div class="alert alert-warning mb-0"><i class="bi bi-exclamation-circle me-2"></i>' +
         'No download buttons found on this page.</div>';
@@ -552,13 +392,12 @@
           if (b.disabled) {
             dlPanel += '<button class="btn btn-dl" disabled title="Currently unavailable">' +
               '<i class="bi bi-lock me-1"></i>' + esc(b.label || 'Link') + '</button>';
-          } else {
-            dlPanel += '<button class="btn btn-dl" data-source-url="' + esc(b.url) + '" data-kind="' +
-              esc(b.kind || 'other') + '"><i class="bi bi-link-45deg me-1"></i>' +
-              esc(b.label || 'Link') + '</button>';
+          } else if (b.url) {
+            dlPanel += '<a class="btn btn-dl" href="' + esc(b.url) + '" rel="nofollow">' +
+              '<i class="bi bi-download me-1"></i>' + esc(b.label || 'Link') + '</a>';
           }
         });
-        dlPanel += '</div><div class="dl-result" hidden></div></div>';
+        dlPanel += '</div></div>';
       });
     }
     dlPanel += '</div>';

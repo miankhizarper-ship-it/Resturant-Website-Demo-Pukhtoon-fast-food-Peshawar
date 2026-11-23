@@ -1,12 +1,11 @@
 <?php
 /**
- * Movia — Detail page + download flow.
+ * Movia — Detail page.
  * ?id=<slug>   (slug = path segment after moviesmod.fi/)
  *
- * Download flow (AJAX, see assets/js/app.js):
- *   1. quality buttons (Episode Links / Batch) -> /api/source?url=<modpro url>
- *   2. user picks an episode/server            -> /api/generate?url=<thenaukriadda url>
- *   3. final download URL is revealed
+ * Download buttons are plain links: clicking one redirects the visitor to
+ * the source ("get link") page, where they pick the episode/server themselves.
+ * Movia never scrapes or generates the final link.
  */
 require_once __DIR__ . '/includes/functions.php';
 
@@ -152,7 +151,7 @@ require __DIR__ . '/includes/header.php';
         <!-- ============ DOWNLOAD SECTION ============ -->
         <div class="download-panel glass p-3 p-md-4" id="downloadPanel">
           <h2 class="h5 mb-1"><i class="bi bi-download text-accent me-1"></i>Download</h2>
-          <p class="text-muted small mb-3">Pick a quality, then choose an episode or server — the direct link is generated for you.</p>
+          <p class="text-muted small mb-3">Choose a quality — you'll be redirected to the get-link page to pick your episode or server.</p>
 
           <?php if (empty($data['downloadGroups'])): ?>
             <div class="alert alert-warning mb-0"><i class="bi bi-exclamation-circle me-2"></i>No download buttons found on this page.</div>
@@ -169,15 +168,12 @@ require __DIR__ . '/includes/header.php';
                         <i class="bi bi-lock me-1"></i><?= e($btn['label'] ?? 'Link') ?>
                       </button>
                     <?php else: ?>
-                      <button class="btn btn-dl"
-                              data-source-url="<?= e($btn['url']) ?>"
-                              data-kind="<?= e($btn['kind'] ?? 'other') ?>">
-                        <i class="bi bi-link-45deg me-1"></i><?= e($btn['label'] ?? 'Link') ?>
-                      </button>
+                      <a class="btn btn-dl" href="<?= e($btn['url']) ?>" rel="nofollow">
+                        <i class="bi bi-download me-1"></i><?= e($btn['label'] ?? 'Link') ?>
+                      </a>
                     <?php endif; ?>
                   <?php endforeach; ?>
                 </div>
-                <div class="dl-result" hidden></div>
               </div>
             <?php endforeach; ?>
           <?php endif; ?>

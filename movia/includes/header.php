@@ -17,19 +17,45 @@ $siteName = SITE_NAME;
 <meta name="theme-color" content="#0b0f1a">
 <title><?= e($pageTitle) ?><?= $pageTitle !== $siteName ? ' — ' . e($siteName) : '' ?></title>
 <meta name="description" content="<?= e(SITE_TAGLINE) ?>">
-<link rel="icon" href="data:image/svg+xml,<?= rawurlencode('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#e50914"/><path d="M24 18v28l22-14z" fill="#fff"/></svg>') ?>">
+<link rel="icon" href="data:image/svg+xml,<?= rawurlencode(movia_logo_svg('fav')) ?>">
 <link rel="stylesheet" href="assets/css/bootstrap.min.css">
 <link rel="stylesheet" href="assets/css/bootstrap-icons.min.css">
 <link rel="stylesheet" href="assets/css/style.css">
+<noscript><style>#splash{display:none!important}body{overflow:auto!important}</style></noscript>
 <script>window.MOVIA_API = <?= json_encode(rtrim(API_BASE, '/')) ?>;</script>
 </head>
-<body>
+<body class="splash-lock">
+
+<div class="splash" id="splash" aria-hidden="true">
+  <div class="splash-inner">
+    <div class="splash-mark"><?= movia_logo_svg('sp') ?></div>
+    <div class="splash-name">Mo<span>v</span>ia</div>
+    <div class="splash-bar"><span></span></div>
+  </div>
+</div>
+<script>
+(function () {
+  var s = document.getElementById('splash');
+  if (!s) return;
+  var hide = function () {
+    if (s.classList.contains('splash-done')) return;
+    s.classList.add('splash-done');
+    document.body.classList.remove('splash-lock');
+    setTimeout(function () { if (s.parentNode) s.parentNode.removeChild(s); }, 600);
+  };
+  if (document.readyState === 'complete') hide();
+  else window.addEventListener('load', hide);
+  window.addEventListener('pageshow', function (e) { if (e.persisted) hide(); });
+  setTimeout(hide, 8000); // hard cap: never trap the visitor
+})();
+</script>
+
 <a class="skip-link" href="#main">Skip to content</a>
 
 <nav class="navbar navbar-expand-lg sticky-top movia-nav" id="topNav">
   <div class="container">
     <a class="navbar-brand" href="index.php">
-      <span class="brand-mark"><i class="bi bi-play-fill"></i></span>
+      <span class="brand-mark"><?= movia_logo_svg('nav') ?></span>
       <span class="brand-name">Mo<span>v</span>ia</span>
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu"
@@ -44,8 +70,8 @@ $siteName = SITE_NAME;
             <i class="bi bi-grid me-1"></i>Explore
           </a>
           <ul class="dropdown-menu dropdown-menu-dark">
-            <?php foreach (NAV_CATEGORIES as [$label, $path]): ?>
-            <li><a class="dropdown-item" href="explore.php?path=<?= urlencode($path) ?>"><?= e($label) ?></a></li>
+            <?php foreach (NAV_CATEGORIES as [$label, $navPath]): ?>
+            <li><a class="dropdown-item" href="explore.php?path=<?= urlencode($navPath) ?>"><?= e($label) ?></a></li>
             <?php endforeach; ?>
           </ul>
         </li>

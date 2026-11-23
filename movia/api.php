@@ -7,8 +7,6 @@
  *   api.php?endpoint=search&q=one
  *   api.php?endpoint=explore&path=/movies/hollywood/
  *   api.php?endpoint=detail&id=slug
- *   api.php?endpoint=source&url=https://episodes.modpro.blog/archives/1
- *   api.php?endpoint=generate&url=https://en.thenaukriadda.in/?sid=…
  */
 require_once __DIR__ . '/includes/functions.php';
 
@@ -17,7 +15,7 @@ header('X-Content-Type-Options: nosniff');
 header('Cache-Control: public, max-age=120');
 
 $endpoint = isset($_GET['endpoint']) ? (string)$_GET['endpoint'] : '';
-$allowed = ['home', 'search', 'explore', 'detail', 'source', 'generate'];
+$allowed = ['home', 'search', 'explore', 'detail'];
 if (!in_array($endpoint, $allowed, true)) {
     http_response_code(400);
     echo json_encode(['error' => 'Unknown endpoint']);
@@ -64,26 +62,6 @@ switch ($endpoint) {
         $params['id'] = $id;
         break;
 
-    case 'source':
-        $url = isset($_GET['url']) ? trim((string)$_GET['url']) : '';
-        if (!movia_url_allowed($url)) {
-            http_response_code(400);
-            echo json_encode(['error' => 'URL host not allowed']);
-            exit;
-        }
-        $params['url'] = $url;
-        break;
-
-    case 'generate':
-        $url = isset($_GET['url']) ? trim((string)$_GET['url']) : '';
-        if (!movia_url_allowed($url)) {
-            http_response_code(400);
-            echo json_encode(['error' => 'URL host not allowed']);
-            exit;
-        }
-        $params['url'] = $url;
-        $timeout = 45; // hop chain can take a while
-        break;
 }
 
 $data = api_get($endpoint, $params, $timeout);
@@ -103,19 +81,3 @@ if (isset($data['error'])) {
 }
 
 echo json_encode($data);
-
-/** SSRF guard for url= params (mirrors worker allow-list). */
-function movia_url_allowed(string $url): bool
-{
-    $host = parse_url($url, PHP_URL_HOST);
-    if (!$host) {
-        return false;
-    }
-    $host = strtolower($host);
-    foreach (ALLOWED_SOURCE_HOSTS as $allowed) {
-        if ($host === $allowed || substr($host, -strlen('.' . $allowed)) === '.' . $allowed) {
-            return true;
-        }
-    }
-    return false;
-}
