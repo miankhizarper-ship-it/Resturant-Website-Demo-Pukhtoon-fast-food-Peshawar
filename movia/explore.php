@@ -83,13 +83,9 @@ require __DIR__ . '/includes/header.php';
 
   <?php if ($error): ?>
     <div class="alert alert-danger glass-alert js-fallback-hide d-flex align-items-center justify-content-between flex-wrap gap-2" role="alert">
-      <span><i class="bi bi-exclamation-triangle me-2"></i><?= e($error) ?></span>
-      <a class="btn btn-sm btn-outline-light" href="explore.php?path=<?= urlencode($path) ?>">Retry</a>
+      <span><i class="bi bi-exclamation-triangle me-2"></i>Server error. Please refresh and try again.</span>
+      <button class="btn btn-sm btn-outline-light" type="button" onclick="window.location.reload()">Refresh</button>
     </div>
-    <details class="tech-details js-fallback-hide mb-3">
-      <summary>Technical details</summary>
-      <code><?= e(api_error_details($data)) ?></code>
-    </details>
     <?php if ($data === null): ?>
       <!-- Server couldn't fetch the API: the browser will try the worker directly. -->
       <div id="jsFallback" data-kind="grid" data-endpoint="explore"

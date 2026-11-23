@@ -38,16 +38,12 @@ require __DIR__ . '/includes/header.php';
 <section class="container section-pad">
   <?php if ($error): ?>
     <div class="empty-state glass js-fallback-hide">
-      <i class="bi bi-emoji-frown"></i>
-      <p><?= e($error) ?></p>
+      <i class="bi bi-exclamation-triangle"></i>
+      <p>Server error. Please refresh and try again.</p>
       <div class="d-flex gap-2 justify-content-center">
         <a class="btn btn-outline-light btn-sm" href="index.php">Home</a>
-        <a class="btn btn-accent btn-sm" href="detail.php?id=<?= e(urlencode($id)) ?>">Retry</a>
+        <button class="btn btn-accent btn-sm" type="button" onclick="window.location.reload()">Refresh</button>
       </div>
-      <details class="tech-details mt-3 text-start">
-        <summary>Technical details</summary>
-        <code><?= e(api_error_details($data)) ?></code>
-      </details>
     </div>
     <?php if ($data === null): ?>
       <!-- Server couldn't fetch the API: the browser will try the worker directly. -->
