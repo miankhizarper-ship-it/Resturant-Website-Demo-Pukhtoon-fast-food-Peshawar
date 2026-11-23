@@ -419,7 +419,8 @@
 
     return crumbs +
       '<div class="row g-4 detail-top">' +
-      '<div class="col-md-4 col-lg-3"><div class="detail-poster glass">' + posterHtml + rating + '</div></div>' +
+      '<div class="col-md-4 col-lg-3"><div class="detail-poster glass">' + posterHtml + rating + '</div>' +
+      '<div class="detail-rail-ad" aria-label="Advertisement"><iframe class="ref-banner ref-banner-tall" scrolling="no" frameborder="0" style="padding:0;margin:0;border:0;border-style:none" width="160" height="600" src="https://refbanners.com/I?tag=d_6396842m_3871c_&amp;site=6396842&amp;ad=3871" title="Advertisement" loading="lazy"></iframe></div></div>' +
       '<div class="col-md-8 col-lg-9">' +
       '<h1 class="detail-title">' + esc(d.title || '') + '</h1>' + date + chips + imdbBox + desc + dlPanel +
       '</div></div>' + related;
