@@ -480,17 +480,8 @@ a:hover { color: #ff9494; }
 @media (max-width: 575.98px) { .sk-search { width: 120px; } .skeleton-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; } }
 @media (prefers-reduced-motion: reduce) { .sk-block::after, .skeleton-chips i::after { animation: none; } }
 
-.native-ad-wrap {
-  min-height: 1px; margin-top: 1.25rem; margin-bottom: .5rem; text-align: center;
-  display: flex; justify-content: center; align-items: flex-start; flex-wrap: wrap; gap: 1rem;
-}
-.native-ad-wrap > div:empty { display: none; }
 .home-native-ad { min-height: 1px; text-align: center; margin-top: 1rem; }
 .home-native-ad > div:empty { display: none; }
-.ref-banner { display: block; border: 0; max-width: 100%; }
-.ref-banner-wide { width: min(475px, 100%); height: 75px; }
-.detail-rail-ad { margin: 1rem auto 0; width: 160px; max-width: 100%; }
-.ref-banner-tall { width: 160px; height: 600px; }
 
 /* ---------- Explore: collapsible filters ---------- */
 .filter-panel { overflow: hidden; }
