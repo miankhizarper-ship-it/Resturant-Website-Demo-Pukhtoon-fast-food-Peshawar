@@ -82,6 +82,13 @@ The fallback order is: `api.php` (server proxy, cached) → worker direct from
 the visitor's browser. Validation errors (400) and worker answers (404/429)
 are never retried, so the free-tier rate limit isn't double-spent.
 
+## Advertising
+
+Third-party Socialbar and NativeBanner ads are injected from `includes/footer.php`.
+The ad scripts and NativeBanner slot are refreshed every 30 seconds without reloading
+or navigating the page. These external providers may use cookies or similar technologies;
+see `privacy.php` for details.
+
 ## Configuration
 
 `config.php`:

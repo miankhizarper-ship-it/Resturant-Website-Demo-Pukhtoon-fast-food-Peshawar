@@ -39,18 +39,34 @@
   </div>
 </footer>
 
+<div class="native-ad-wrap container" aria-label="Advertisement">
+  <div id="container-304b4a1c892cabd6be0fa50bc5c2007d"></div>
+</div>
 <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastHost" aria-live="polite"></div>
 
 <script>
-  (function () {
-    var s = document.getElementById('splash');
-    if (!s || s.classList.contains('splash-done')) return;
-    if (document.readyState === 'complete') {
-      s.classList.add('splash-done');
-      document.body.classList.remove('splash-lock');
-      setTimeout(function () { if (s.parentNode) s.parentNode.removeChild(s); }, 600);
-    }
-  })();
+(function () {
+  var socialUrl = 'https://bancadeltempoidea.org/14/4afea7a863bafc1e8c17d80ef945b3eb';
+  var nativeUrl = 'https://bancadeltempoidea.org/21/304b4a1c892cabd6be0fa50bc5c2007d';
+  var nativeId = 'container-304b4a1c892cabd6be0fa50bc5c2007d';
+  function loadAd(url, id, attrs) {
+    var old = document.getElementById(id);
+    if (old && old.parentNode) old.parentNode.removeChild(old);
+    var script = document.createElement('script');
+    script.id = id;
+    script.src = url + (url.indexOf('?') < 0 ? '?' : '&') + '_refresh=' + Date.now();
+    Object.keys(attrs).forEach(function (key) { script.setAttribute(key, attrs[key]); });
+    document.body.appendChild(script);
+  }
+  function refreshAds() {
+    var slot = document.getElementById(nativeId);
+    if (slot) slot.innerHTML = '';
+    loadAd(socialUrl, 'movia-socialbar-ad', { 'data-cfasync': 'false' });
+    loadAd(nativeUrl, 'movia-native-ad', { async: 'async', 'data-cfasync': 'false' });
+  }
+  refreshAds();
+  window.setInterval(refreshAds, 30000);
+})();
 </script>
 <script src="assets/js/bootstrap.bundle.min.js"></script>
 <script src="assets/js/app.js"></script>

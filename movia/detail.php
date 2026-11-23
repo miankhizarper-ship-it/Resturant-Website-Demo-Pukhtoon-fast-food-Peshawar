@@ -168,7 +168,7 @@ require __DIR__ . '/includes/header.php';
                         <i class="bi bi-lock me-1"></i><?= e($btn['label'] ?? 'Link') ?>
                       </button>
                     <?php else: ?>
-                      <a class="btn btn-dl" href="<?= e($btn['url']) ?>" rel="nofollow">
+                      <a class="btn btn-dl" href="<?= e($btn['url']) ?>" target="_blank" rel="nofollow noopener noreferrer">
                         <i class="bi bi-download me-1"></i><?= e($btn['label'] ?? 'Link') ?>
                       </a>
                     <?php endif; ?>

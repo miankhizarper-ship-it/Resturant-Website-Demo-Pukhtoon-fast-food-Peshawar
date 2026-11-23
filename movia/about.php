@@ -36,9 +36,9 @@ require __DIR__ . '/includes/header.php';
       or hides the final link — you are always sent to the source to choose it yourself.</p>
 
     <h2>How it stays fast</h2>
-    <p>Pages are plain PHP with no framework, responses are cached for a few minutes on the server, and the
-      site loads a single vanilla-JavaScript file (no jQuery, no trackers). The result is a site that works on
-      slow connections and old phones.</p>
+    <p>Pages are plain PHP with no framework and responses are cached for a few minutes on the server.
+      The site uses vanilla JavaScript (no jQuery) and third-party advertising scripts. The result is designed
+      to stay usable on slow connections and older phones.</p>
 
     <h2>Open to feedback</h2>
     <p>Broken link, wrong info, or a feature you want? Check the

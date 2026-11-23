@@ -393,7 +393,7 @@
             dlPanel += '<button class="btn btn-dl" disabled title="Currently unavailable">' +
               '<i class="bi bi-lock me-1"></i>' + esc(b.label || 'Link') + '</button>';
           } else if (b.url) {
-            dlPanel += '<a class="btn btn-dl" href="' + esc(b.url) + '" rel="nofollow">' +
+            dlPanel += '<a class="btn btn-dl" href="' + esc(b.url) + '" target="_blank" rel="nofollow noopener noreferrer">' +
               '<i class="bi bi-download me-1"></i>' + esc(b.label || 'Link') + '</a>';
           }
         });
