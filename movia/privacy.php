@@ -24,8 +24,9 @@ require __DIR__ . '/includes/header.php';
     <ul>
       <li><strong>No accounts.</strong> There is no sign-up, login or profile. We never ask for your name,
         email address or phone number.</li>
-      <li><strong>No tracking cookies.</strong> Movia does not set advertising or analytics cookies, and does
-        not use browser fingerprinting.</li>
+      <li><strong>Movia itself does not set tracking cookies.</strong> Third-party advertising scripts displayed
+        on this site may use cookies or similar technologies under their own privacy policies. Movia does not
+        control those scripts or their data practices.</li>
       <li><strong>No personal storage.</strong> Movia does not use <code>localStorage</code>,
         <code>sessionStorage</code> or <code>document.cookie</code> in its JavaScript.</li>
       <li><strong>Standard server logs.</strong> Like almost any website, our host records basic request data
@@ -38,10 +39,11 @@ require __DIR__ . '/includes/header.php';
       understanding aggregate traffic (for example, which pages are slow). We do not sell, rent or share it
       with advertisers.</p>
 
-    <h2>Third-party links</h2>
-    <p>Movia links out to third-party source and download pages. Those sites have their own privacy policies,
-      and Movia has no control over what they collect. We recommend reviewing the policy of any site you
-      visit from here.</p>
+    <h2>Third-party links and advertising</h2>
+    <p>Movia links out to third-party source and download pages and loads third-party advertising scripts.
+      Those sites and advertising providers may collect data, use cookies or similar technologies, and have
+      their own privacy policies. Movia has no control over their practices. Review the policy of any third
+      party you interact with, and use your browser settings to manage cookies or block scripts if desired.</p>
 
     <h2>Content from the source</h2>
     <p>Poster images and title details shown on Movia are read from publicly available source pages and are

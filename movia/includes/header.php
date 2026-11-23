@@ -21,32 +21,34 @@ $siteName = SITE_NAME;
 <link rel="stylesheet" href="assets/css/bootstrap.min.css">
 <link rel="stylesheet" href="assets/css/bootstrap-icons.min.css">
 <link rel="stylesheet" href="assets/css/style.css">
-<noscript><style>#splash{display:none!important}body{overflow:auto!important}</style></noscript>
+<noscript><style>#pageSkeleton{display:none!important}</style></noscript>
 <script>window.MOVIA_API = <?= json_encode(rtrim(API_BASE, '/')) ?>;</script>
 </head>
-<body class="splash-lock">
+<body>
 
-<div class="splash" id="splash" aria-hidden="true">
-  <div class="splash-inner">
-    <div class="splash-mark"><?= movia_logo_svg('sp') ?></div>
-    <div class="splash-name">Mo<span>v</span>ia</div>
-    <div class="splash-bar"><span></span></div>
+<div class="page-skeleton" id="pageSkeleton" aria-hidden="true">
+  <div class="skeleton-nav"><span class="sk-block sk-brand"></span><span class="sk-block sk-navitem"></span><span class="sk-block sk-navitem"></span><span class="sk-block sk-search"></span></div>
+  <div class="skeleton-content">
+    <span class="sk-block sk-title"></span>
+    <div class="skeleton-chips"><i></i><i></i><i></i><i></i></div>
+    <div class="skeleton-grid">
+      <?php for ($sk = 0; $sk < 8; $sk++): ?><div class="skeleton-card"><span class="sk-block sk-poster"></span><span class="sk-block sk-line"></span><span class="sk-block sk-line short"></span></div><?php endfor; ?>
+    </div>
   </div>
 </div>
 <script>
 (function () {
-  var s = document.getElementById('splash');
+  var s = document.getElementById('pageSkeleton');
   if (!s) return;
   var hide = function () {
-    if (s.classList.contains('splash-done')) return;
-    s.classList.add('splash-done');
-    document.body.classList.remove('splash-lock');
-    setTimeout(function () { if (s.parentNode) s.parentNode.removeChild(s); }, 600);
+    if (!s || s.classList.contains('skeleton-done')) return;
+    s.classList.add('skeleton-done');
+    setTimeout(function () { if (s.parentNode) s.parentNode.removeChild(s); }, 250);
   };
-  if (document.readyState === 'complete') hide();
-  else window.addEventListener('load', hide);
+  if (document.readyState !== 'loading') hide();
+  else document.addEventListener('DOMContentLoaded', hide, { once: true });
   window.addEventListener('pageshow', function (e) { if (e.persisted) hide(); });
-  setTimeout(hide, 8000); // hard cap: never trap the visitor
+  setTimeout(hide, 3500);
 })();
 </script>
 
