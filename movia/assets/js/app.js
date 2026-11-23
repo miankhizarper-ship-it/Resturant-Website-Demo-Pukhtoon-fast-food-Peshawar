@@ -443,13 +443,11 @@
         renderFallbackGrid(host, data, endpoint, params);
       }
       host.classList.add('fb-done');
-    }).catch(function (err) {
-      var msg = err && err.message ? err.message : 'Could not load content.';
-      if (err && err.detail) msg += ' — ' + err.detail;
+    }).catch(function () {
       host.innerHTML =
         '<div class="alert alert-danger glass-alert d-flex align-items-center justify-content-between flex-wrap gap-2" role="alert">' +
-        '<span><i class="bi bi-exclamation-triangle me-2"></i>' + esc(msg) + '</span>' +
-        '<button type="button" class="btn btn-sm btn-outline-light" data-fb-retry>Retry</button></div>';
+        '<span><i class="bi bi-exclamation-triangle me-2"></i>Server error. Please refresh and try again.</span>' +
+        '<button type="button" class="btn btn-sm btn-outline-light" data-fb-retry>Refresh</button></div>';
       var retry = host.querySelector('[data-fb-retry]');
       if (retry) retry.addEventListener('click', function () { location.reload(); });
     });

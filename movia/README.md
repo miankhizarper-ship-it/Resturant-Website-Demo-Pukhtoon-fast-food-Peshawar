@@ -60,27 +60,13 @@ Open http://localhost:8080
 - The API URL lives in `config.php` — change it there if your worker URL changes.
 - Free-tier worker limits apply (the scraper returns `429` when rate-limited; the UI shows a friendly retry).
 
-## Troubleshooting: "Could not reach the server"
+## Production error handling
 
-If pages render but every request shows *"Could not reach the server. Please try
-again in a moment."*, the **host's PHP** couldn't fetch the worker (outbound
-block, DNS, SSL, or no curl/fopen). Two things help:
+Visitors see a short **“Server error. Please refresh and try again.”** message
+with a Refresh button when neither the server proxy nor browser fallback can
+load data. Transport details are not exposed in the public interface; operational
+diagnostics remain available through `debug.php` for site administrators.
 
-1. **Open `https://your-site/debug.php`** — it shows exactly which step fails
-   (DNS, cURL, `allow_url_fopen`, SSL, live `/api/home` test, cache writability)
-   plus the raw transport error. If it says *SSL certificate problem*, set
-   `define('API_SSL_VERIFY', false);` in `config.php`.
-
-2. **The site still works without server-side fetching.** Every page detects the
-   failure and the **browser calls the worker directly** (the worker sends
-   `Access-Control-Allow-Origin: *`), rendering the same content client-side —
-   grids, detail pages, search suggestions, and download links.
-   Error banners include a collapsible **Technical details** block with the
-   raw cause, so you can paste it into a support ticket.
-
-The fallback order is: `api.php` (server proxy, cached) → worker direct from
-the visitor's browser. Validation errors (400) and worker answers (404/429)
-are never retried, so the free-tier rate limit isn't double-spent.
 
 ## Advertising
 

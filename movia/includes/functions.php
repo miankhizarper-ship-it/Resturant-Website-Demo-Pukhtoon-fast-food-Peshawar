@@ -165,16 +165,6 @@ function api_error_message(?array $data): string
     return isset($data['error']) ? (string)$data['error'] : 'Something went wrong.';
 }
 
-/** Short technical cause shown collapsed under error banners (debug aid). */
-function api_error_details(?array $data): string
-{
-    if ($data === null) {
-        $t = api_last_error();
-        return $t !== '' ? $t : 'No detail captured (cURL missing and allow_url_fopen off?)';
-    }
-    return json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-}
-
 /** Convert an absolute moviesmod URL to an internal explore path. */
 function internal_path(string $url): string
 {
