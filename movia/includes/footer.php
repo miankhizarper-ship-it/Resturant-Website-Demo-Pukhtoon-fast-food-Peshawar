@@ -50,7 +50,6 @@
           width="300" height="250"
           src="https://refbanners.com/I?tag=d_6396842m_3845c_&amp;site=6396842&amp;ad=3845"
           title="Advertisement" loading="lazy"></iframe>
-  <div id="container-304b4a1c892cabd6be0fa50bc5c2007d"></div>
 </div>
 <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastHost" aria-live="polite"></div>
 
@@ -70,9 +69,11 @@
   }
   function refreshAds() {
     var slot = document.getElementById(nativeId);
-    if (slot) slot.innerHTML = '';
     loadAd(socialUrl, 'movia-socialbar-ad', { 'data-cfasync': 'false' });
-    loadAd(nativeUrl, 'movia-native-ad', { async: 'async', 'data-cfasync': 'false' });
+    if (slot) {
+      slot.innerHTML = '';
+      loadAd(nativeUrl, 'movia-native-ad', { async: 'async', 'data-cfasync': 'false' });
+    }
   }
   refreshAds();
   window.setInterval(refreshAds, 30000);

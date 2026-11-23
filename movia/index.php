@@ -18,6 +18,10 @@ $activeNav = 'home';
 require __DIR__ . '/includes/header.php';
 ?>
 
+<div class="home-native-ad container" aria-label="Advertisement">
+  <div id="container-304b4a1c892cabd6be0fa50bc5c2007d"></div>
+</div>
+
 <?php if ($hero): ?>
 <section class="hero-section">
   <div class="hero-backdrop" style="background-image:url('<?= e($hero['image'] ?? '') ?>')"></div>
