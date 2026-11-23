@@ -81,13 +81,6 @@ require __DIR__ . '/includes/header.php';
             </div>
           <?php endif; ?>
         </div>
-        <div class="detail-rail-ad" aria-label="Advertisement">
-          <iframe class="ref-banner ref-banner-tall" scrolling="no" frameborder="0"
-                  style="padding:0;margin:0;border:0;border-style:none"
-                  width="160" height="600"
-                  src="https://refbanners.com/I?tag=d_6396842m_3871c_&amp;site=6396842&amp;ad=3871"
-                  title="Advertisement" loading="lazy"></iframe>
-        </div>
       </div>
 
       <div class="col-md-8 col-lg-9">
